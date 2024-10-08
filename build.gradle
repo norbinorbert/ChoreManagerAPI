@@ -1,9 +1,1 @@
-plugins {
-    id 'java'
-    id 'application'
-}
-
-application {
-    // a main metódust tartalmazó osztály megjelölése
-    mainClass = 'edu.bbte.gradleex.application.HelloWorld'
-}
+apply plugin: "java"
