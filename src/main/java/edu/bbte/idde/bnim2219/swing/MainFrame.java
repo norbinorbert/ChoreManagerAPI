@@ -1,4 +1,14 @@
 package edu.bbte.idde.bnim2219.swing;
 
-public class MainFrame {
+import javax.swing.*;
+
+public class MainFrame extends JFrame {
+    public MainFrame(){
+
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new MainFrame();
+    }
 }
