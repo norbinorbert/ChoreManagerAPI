@@ -1,8 +1,10 @@
 package edu.bbte.idde.bnim2219.swing;
 
+import edu.bbte.idde.bnim2219.model.Chore;
 import edu.bbte.idde.bnim2219.service.ChoreService;
 import edu.bbte.idde.bnim2219.service.NotFoundServiceException;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -11,13 +13,19 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.text.SimpleDateFormat;
 
 public class DisplayPanel extends JPanel {
     private final ChoreService choreService = new ChoreService();
     private final JTable toDoList;
     private final DefaultTableModel defaultTableModel;
+    private final JFrame frame;
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
-    public DisplayPanel(){
+    public DisplayPanel(JFrame frame){
+        this.frame = frame;
         setBackground(Color.LIGHT_GRAY);
 
         String[] columnNames = { "ID", "Title", "Description", "Deadline", "Priority Level", "Done?" };
@@ -41,11 +49,38 @@ public class DisplayPanel extends JPanel {
     }
 
     public void addNewChore(){
-        // TODO/idea: new frame pops up that asks for data regarding the new chore
+        frame.setEnabled(false);
+        NewChoreFrame addChoreFrame = new NewChoreFrame();
+        addChoreFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                frame.setEnabled(true);
+            }
+        });
+        addChoreFrame.getOkButton().addActionListener(e -> {
+            Chore newChore = addChoreFrame.getNewChore();
+            if(newChore != null) {
+                Long newChoreId = choreService.create(newChore);
+                defaultTableModel.addRow(new String[]{newChoreId.toString(), newChore.getTitle(),
+                        newChore.getDescription(), simpleDateFormat.format(newChore.getDeadline()),
+                        newChore.getPriorityLevel().toString(), newChore.getDone().toString()});
+                addChoreFrame.dispose();
+                frame.setEnabled(true);
+                frame.requestFocus();
+            }
+        });
+        addChoreFrame.getCancelButton().addActionListener(e -> {
+            addChoreFrame.dispose();
+            frame.setEnabled(true);
+            frame.requestFocus();
+        });
+        addChoreFrame.setVisible(true);
     }
 
     public void updateSelected(){
         // TODO/idea: new frame pops up where the user can change the data of the selected chore
+        //frame.setEnabled(false);
     }
 
     public void deleteSelected(){

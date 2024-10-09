@@ -15,7 +15,7 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("To-Do List");
 
-        DisplayPanel displayPanel = new DisplayPanel();
+        DisplayPanel displayPanel = new DisplayPanel(this);
         add(displayPanel, BorderLayout.CENTER);
 
         ButtonPanel buttonPanel = new ButtonPanel(displayPanel);
