@@ -13,8 +13,12 @@ public class ChoreService {
         return data.create(chore);
     }
 
-    public Chore findById(Long ID) {
-        return data.findById(ID);
+    public Chore findById(Long ID) throws NotFoundServiceException {
+        Chore chore = data.findById(ID);
+        if(chore == null){
+            throw new NotFoundServiceException();
+        }
+        return chore;
     }
 
     public Collection<Chore> findAll() {

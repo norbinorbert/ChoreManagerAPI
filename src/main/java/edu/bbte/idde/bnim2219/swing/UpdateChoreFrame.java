@@ -2,64 +2,70 @@ package edu.bbte.idde.bnim2219.swing;
 
 import edu.bbte.idde.bnim2219.model.Chore;
 import edu.bbte.idde.bnim2219.model.Pair;
+import edu.bbte.idde.bnim2219.model.Triple;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import java.awt.Dimension;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class NewChoreFrame extends JFrame {
+public class UpdateChoreFrame extends JFrame{
     private final JButton okButton = new JButton("Ok");
     private final JButton cancelButton = new JButton("Cancel");
     private final JTextArea titleText = new JTextArea();
     private final JTextArea descriptionText = new JTextArea();
     private final JTextArea dateText = new JTextArea();
     private final JTextArea priorityText = new JTextArea();
+    private final JCheckBox doneBox = new JCheckBox();
 
-    public NewChoreFrame(){
-        setSize(new Dimension(400, 300));
+    public UpdateChoreFrame(Chore chore, SimpleDateFormat simpleDateFormat){
+        setSize(new Dimension(400, 400));
         setResizable(false);
-        setTitle("New chore");
+        setTitle("Update chore");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setLayout(new GridLayout(5, 2));
+        setLayout(new GridLayout(6, 2));
 
         JLabel titleLabel = new JLabel("Title");
         add(titleLabel);
         titleText.setLineWrap(true);
+        titleText.setText(chore.getTitle());
         add(new JScrollPane(titleText));
 
         JLabel descriptionLabel = new JLabel("Description");
         add(descriptionLabel);
         descriptionText.setLineWrap(true);
+        descriptionText.setText(chore.getDescription());
         add(new JScrollPane(descriptionText));
 
         JLabel dateLabel = new JLabel("Date (YYYY/MM/DD)");
         add(dateLabel);
         dateText.setLineWrap(true);
+        dateText.setText(simpleDateFormat.format(chore.getDeadline()));
         add(new JScrollPane(dateText));
 
         JLabel priorityLabel = new JLabel("Priority Level");
         add(priorityLabel);
         priorityText.setLineWrap(true);
+        priorityText.setText(chore.getPriorityLevel().toString());
         add(new JScrollPane(priorityText));
+
+        JLabel doneLabel = new JLabel("Done?");
+        add(doneLabel);
+        doneBox.setSelected(chore.getDone());
+        add(doneBox);
 
         add(okButton);
         add(cancelButton);
     }
 
-    public Chore getNewChore(){
+    public Chore getUpdatedChore(){
         Pair<Date, Integer> pair = validateInput();
         if(pair == null){
             return null;
         }
-        return new Chore(9L, titleText.getText(), descriptionText.getText(), pair.getFirst(),
-                pair.getSecond(), false);
+        return new Chore(0L, titleText.getText(), descriptionText.getText(), pair.getFirst(),
+                pair.getSecond(), doneBox.isSelected());
     }
 
     private Pair<Date, Integer> validateInput(){

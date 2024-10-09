@@ -79,8 +79,55 @@ public class DisplayPanel extends JPanel {
     }
 
     public void updateSelected(){
-        // TODO/idea: new frame pops up where the user can change the data of the selected chore
-        //frame.setEnabled(false);
+        int rowIndex = toDoList.getSelectedRow();
+        if(rowIndex == -1){
+            return;
+        }
+        Long id = Long.parseLong((String) defaultTableModel.getValueAt(rowIndex, 0));
+        Chore chore;
+        try {
+            chore = choreService.findById(id);
+        }
+        catch (NotFoundServiceException e){
+            new ErrorFrame(frame,"Chore doesn't exist or has been deleted");
+            defaultTableModel.removeRow(rowIndex);
+            return;
+        }
+
+        frame.setEnabled(false);
+        UpdateChoreFrame updateChoreFrame = new UpdateChoreFrame(chore, simpleDateFormat);
+        updateChoreFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                frame.setEnabled(true);
+            }
+        });
+        updateChoreFrame.getOkButton().addActionListener(e -> {
+            Chore updatedChore = updateChoreFrame.getUpdatedChore();
+            if(updatedChore != null) {
+                defaultTableModel.removeRow(rowIndex);
+                try {
+                    choreService.update(id, updatedChore);
+                }
+                catch (NotFoundServiceException exception){
+                    new ErrorFrame(frame,"Chore doesn't exist or has been deleted");
+                    return;
+                }
+                defaultTableModel.insertRow(rowIndex, new String[]{id.toString(), updatedChore.getTitle(),
+                        updatedChore.getDescription(), simpleDateFormat.format(updatedChore.getDeadline()),
+                        updatedChore.getPriorityLevel().toString(), updatedChore.getDone().toString()});
+                updateChoreFrame.dispose();
+                frame.setEnabled(true);
+                frame.requestFocus();
+            }
+        });
+        updateChoreFrame.getCancelButton().addActionListener(e -> {
+            updateChoreFrame.dispose();
+            frame.setEnabled(true);
+            frame.requestFocus();
+        });
+        updateChoreFrame.setVisible(true);
     }
 
     public void deleteSelected(){
@@ -93,8 +140,10 @@ public class DisplayPanel extends JPanel {
             choreService.delete(id);
         }
         catch (NotFoundServiceException e){
-            System.out.println("Chore not found");
+            new ErrorFrame(frame,"Chore already deleted");
         }
-        defaultTableModel.removeRow(rowIndex);
+        finally {
+            defaultTableModel.removeRow(rowIndex);
+        }
     }
 }

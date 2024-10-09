@@ -3,6 +3,7 @@ package edu.bbte.idde.bnim2219.swing;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -12,10 +13,11 @@ public class ErrorFrame extends JFrame {
         parentFrame.setEnabled(false);
 
         setTitle("Error");
-        setSize(300, 100);;
+        setSize(300, 100);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         JLabel errorLabel = new JLabel(message);
+        errorLabel.setForeground(Color.RED);
         add(errorLabel);
         errorLabel.setVerticalAlignment(SwingConstants.CENTER);
         errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
