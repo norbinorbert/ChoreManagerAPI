@@ -4,6 +4,7 @@ import edu.bbte.idde.bnim2219.model.Chore;
 
 import java.util.Collection;
 
+// interface for implementing CRUD functions
 public interface ChoreDao {
     Long create(Chore chore);
     Chore findById(Long ID);

@@ -3,10 +3,11 @@ package edu.bbte.idde.bnim2219.swing;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-import java.awt.*;
+import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+// error frame, disables parent frame and displays a message
 public class ErrorFrame extends JFrame {
 
     public ErrorFrame(JFrame parentFrame, String message){
@@ -22,6 +23,7 @@ public class ErrorFrame extends JFrame {
         errorLabel.setVerticalAlignment(SwingConstants.CENTER);
         errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
+        // re-enables parent frame when closed
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {

@@ -2,14 +2,20 @@ package edu.bbte.idde.bnim2219.swing;
 
 import edu.bbte.idde.bnim2219.model.Chore;
 import edu.bbte.idde.bnim2219.model.Pair;
-import edu.bbte.idde.bnim2219.model.Triple;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+// frame where user can update an existing chore
 public class UpdateChoreFrame extends JFrame{
     private final JButton okButton = new JButton("Ok");
     private final JButton cancelButton = new JButton("Cancel");
@@ -19,6 +25,7 @@ public class UpdateChoreFrame extends JFrame{
     private final JTextArea priorityText = new JTextArea();
     private final JCheckBox doneBox = new JCheckBox();
 
+    // set the text areas according to the input data
     public UpdateChoreFrame(Chore chore, SimpleDateFormat simpleDateFormat){
         setSize(new Dimension(400, 400));
         setResizable(false);
@@ -59,6 +66,7 @@ public class UpdateChoreFrame extends JFrame{
         add(cancelButton);
     }
 
+    // after validating the input, return a chore with the provided data
     public Chore getUpdatedChore(){
         Pair<Date, Integer> pair = validateInput();
         if(pair == null){
@@ -68,6 +76,8 @@ public class UpdateChoreFrame extends JFrame{
                 pair.getSecond(), doneBox.isSelected());
     }
 
+    // check if there is a title, date is in correct format and priority level is an integer
+    // return the date and integer, so they don't need to parsed again
     private Pair<Date, Integer> validateInput(){
         if(titleText.getText().isEmpty()){
             new ErrorFrame(this, "You must provide a title");

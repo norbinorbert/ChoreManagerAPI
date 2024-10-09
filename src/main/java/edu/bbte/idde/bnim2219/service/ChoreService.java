@@ -6,6 +6,7 @@ import edu.bbte.idde.bnim2219.model.Chore;
 
 import java.util.Collection;
 
+// proxy service for now
 public class ChoreService {
     private final ChoreInMemoryDao data = new ChoreInMemoryDao();
 

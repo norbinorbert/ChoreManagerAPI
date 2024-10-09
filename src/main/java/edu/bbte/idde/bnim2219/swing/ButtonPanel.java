@@ -8,6 +8,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+// panel that has 3 buttons which can be used to crate, update and delete chores
 public class ButtonPanel extends JPanel implements ActionListener {
     private final JButton addButton = new JButton("Add new chore");
     private final JButton updateButton = new JButton("Update selected chore");
@@ -22,6 +23,7 @@ public class ButtonPanel extends JPanel implements ActionListener {
         setLayout(flowLayout);
         setBackground(Color.LIGHT_GRAY);
 
+        // buttons will fill the whole width
         add(addButton);
         addButton.setPreferredSize(new Dimension(MainFrame.DEFAULT_WIDTH / 3 - 3 * flowLayout.getHgap(),
                 BUTTON_HEIGHT));

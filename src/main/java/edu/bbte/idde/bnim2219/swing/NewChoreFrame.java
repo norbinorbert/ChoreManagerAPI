@@ -14,6 +14,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+// frame where user can input data for a new chore
 public class NewChoreFrame extends JFrame {
     private final JButton okButton = new JButton("Ok");
     private final JButton cancelButton = new JButton("Cancel");
@@ -53,15 +54,18 @@ public class NewChoreFrame extends JFrame {
         add(cancelButton);
     }
 
+    // after validating the input, return a chore with the provided data that isn't done yet
     public Chore getNewChore(){
         Pair<Date, Integer> pair = validateInput();
         if(pair == null){
             return null;
         }
-        return new Chore(9L, titleText.getText(), descriptionText.getText(), pair.getFirst(),
+        return new Chore(0L, titleText.getText(), descriptionText.getText(), pair.getFirst(),
                 pair.getSecond(), false);
     }
 
+    // check if there is a title, date is in correct format and priority level is an integer
+    // return the date and integer, so they don't need to parsed again
     private Pair<Date, Integer> validateInput(){
         if(titleText.getText().isEmpty()){
             new ErrorFrame(this, "You must provide a title");

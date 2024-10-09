@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
+// main frame that shows up on application start
 public class MainFrame extends JFrame {
     public static final Integer DEFAULT_WIDTH = 800;
     public static final Integer DEFAULT_HEIGHT = 600;
