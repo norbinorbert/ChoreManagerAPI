@@ -1,6 +1,7 @@
 package edu.bbte.idde.bnim2219.model;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class Chore extends BaseEntity {
     private String title;
@@ -16,6 +17,22 @@ public class Chore extends BaseEntity {
         this.deadline = deadline;
         this.priorityLevel = priorityLevel;
         this.done = done;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Chore chore = (Chore) o;
+        return Objects.equals(title, chore.title) && Objects.equals(description, chore.description) &&
+                Objects.equals(deadline, chore.deadline) && Objects.equals(priorityLevel, chore.priorityLevel) &&
+                Objects.equals(done, chore.done);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), title, description, deadline, priorityLevel, done);
     }
 
     public String getTitle() {

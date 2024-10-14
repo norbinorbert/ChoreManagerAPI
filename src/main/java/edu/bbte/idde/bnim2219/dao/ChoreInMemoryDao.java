@@ -1,5 +1,6 @@
 package edu.bbte.idde.bnim2219.dao;
 
+import edu.bbte.idde.bnim2219.dao.exceptions.NotFoundException;
 import edu.bbte.idde.bnim2219.model.Chore;
 
 import java.util.Collection;
@@ -7,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 // class that implements the CRUD functions, stores data in memory in a map
-public class ChoreInMemoryDao implements ChoreDao{
+public class ChoreInMemoryDao implements Dao<Chore> {
     private final ConcurrentHashMap<Long, Chore> toDoList = new ConcurrentHashMap<>();
     private final AtomicLong id = new AtomicLong(0L);
 
@@ -22,8 +23,12 @@ public class ChoreInMemoryDao implements ChoreDao{
 
     // returns the chore with the provided ID
     @Override
-    public Chore findById(Long ID) {
-        return toDoList.get(ID);
+    public Chore findById(Long ID) throws NotFoundException {
+        Chore chore = toDoList.get(ID);
+        if(chore == null){
+            throw new NotFoundException();
+        }
+        return chore;
     }
 
     // returns all chores in a collection
@@ -34,22 +39,22 @@ public class ChoreInMemoryDao implements ChoreDao{
 
     // updates the chore that has the provided ID, used data from the provided chore
     @Override
-    public void update(Long id, Chore chore) throws NotFoundException {
-        Chore existingChore = toDoList.get(id);
+    public void update(Long ID, Chore chore) throws NotFoundException {
+        Chore existingChore = toDoList.get(ID);
         if (existingChore == null){
             throw new NotFoundException();
         }
-        chore.setId(id);
-        toDoList.put(id, chore);
+        chore.setId(ID);
+        toDoList.put(ID, chore);
     }
 
     // deleted the chore that has the provided ID
     @Override
-    public void delete(Long id) throws NotFoundException {
-        Chore existingChore = toDoList.get(id);
+    public void delete(Long ID) throws NotFoundException {
+        Chore existingChore = toDoList.get(ID);
         if(existingChore == null){
             throw new NotFoundException();
         }
-        toDoList.remove(id);
+        toDoList.remove(ID);
     }
 }

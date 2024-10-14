@@ -2,7 +2,7 @@ package edu.bbte.idde.bnim2219.swing;
 
 import edu.bbte.idde.bnim2219.model.Chore;
 import edu.bbte.idde.bnim2219.service.ChoreService;
-import edu.bbte.idde.bnim2219.service.NotFoundServiceException;
+import edu.bbte.idde.bnim2219.service.exceptions.NotFoundServiceException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;

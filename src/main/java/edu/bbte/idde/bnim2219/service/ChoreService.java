@@ -1,8 +1,9 @@
 package edu.bbte.idde.bnim2219.service;
 
 import edu.bbte.idde.bnim2219.dao.ChoreInMemoryDao;
-import edu.bbte.idde.bnim2219.dao.NotFoundException;
+import edu.bbte.idde.bnim2219.dao.exceptions.NotFoundException;
 import edu.bbte.idde.bnim2219.model.Chore;
+import edu.bbte.idde.bnim2219.service.exceptions.NotFoundServiceException;
 
 import java.util.Collection;
 
@@ -15,11 +16,12 @@ public class ChoreService {
     }
 
     public Chore findById(Long ID) throws NotFoundServiceException {
-        Chore chore = data.findById(ID);
-        if(chore == null){
+        try {
+            return data.findById(ID);
+        }
+        catch (NotFoundException e){
             throw new NotFoundServiceException();
         }
-        return chore;
     }
 
     public Collection<Chore> findAll() {

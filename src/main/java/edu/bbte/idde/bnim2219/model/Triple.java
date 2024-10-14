@@ -1,5 +1,7 @@
 package edu.bbte.idde.bnim2219.model;
 
+import java.util.Objects;
+
 public class Triple<L, M, R> {
     L left;
     M middle;
@@ -21,5 +23,18 @@ public class Triple<L, M, R> {
 
     public R getRight() {
         return right;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Triple<?, ?, ?> triple = (Triple<?, ?, ?>) o;
+        return Objects.equals(left, triple.left) && Objects.equals(middle, triple.middle) && Objects.equals(right, triple.right);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(left, middle, right);
     }
 }
