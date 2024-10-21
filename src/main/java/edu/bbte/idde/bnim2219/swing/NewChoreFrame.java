@@ -23,7 +23,7 @@ public class NewChoreFrame extends JFrame {
     private final JTextArea dateText = new JTextArea();
     private final JTextArea priorityText = new JTextArea();
 
-    public NewChoreFrame(){
+    public NewChoreFrame() {
         setSize(new Dimension(400, 300));
         setResizable(false);
         setTitle("New chore");
@@ -55,9 +55,9 @@ public class NewChoreFrame extends JFrame {
     }
 
     // after validating the input, return a chore with the provided data that isn't done yet
-    public Chore getNewChore(){
+    public Chore getNewChore() {
         Pair<Date, Integer> pair = validateInput();
-        if(pair == null){
+        if (pair == null) {
             return null;
         }
         return new Chore(0L, titleText.getText(), descriptionText.getText(), pair.getFirst(),
@@ -66,14 +66,14 @@ public class NewChoreFrame extends JFrame {
 
     // check if there is a title, date is in correct format and priority level is an integer
     // return the date and integer, so they don't need to parsed again
-    private Pair<Date, Integer> validateInput(){
-        if(titleText.getText().isEmpty()){
+    private Pair<Date, Integer> validateInput() {
+        if (titleText.getText().isEmpty()) {
             new ErrorFrame(this, "You must provide a title");
             return null;
         }
 
         Date date;
-        try{
+        try {
             date = new SimpleDateFormat("yyyy/MM/dd").parse(dateText.getText());
         } catch (ParseException e) {
             new ErrorFrame(this, "Invalid date format");
@@ -83,8 +83,7 @@ public class NewChoreFrame extends JFrame {
         int priorityLevel;
         try {
             priorityLevel = Integer.parseInt(priorityText.getText());
-        }
-        catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             new ErrorFrame(this, "Invalid priority level. It must be an integer");
             return null;
         }

@@ -10,7 +10,7 @@ import java.awt.event.WindowEvent;
 // error frame, disables parent frame and displays a message
 public class ErrorFrame extends JFrame {
 
-    public ErrorFrame(JFrame parentFrame, String message){
+    public ErrorFrame(JFrame parentFrame, String message) {
         parentFrame.setEnabled(false);
 
         setTitle("Error");

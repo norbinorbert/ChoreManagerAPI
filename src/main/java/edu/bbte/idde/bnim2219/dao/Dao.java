@@ -8,8 +8,13 @@ import java.util.Collection;
 // interface for implementing CRUD functions
 public interface Dao<T extends BaseEntity> {
     Long create(T entity);
-    T findById(Long ID) throws NotFoundException;
+
+    T findById(Long id) throws NotFoundException;
+
     Collection<T> findAll();
+
     void update(Long id, T entity) throws NotFoundException;
+
     void delete(Long id) throws NotFoundException;
+
 }

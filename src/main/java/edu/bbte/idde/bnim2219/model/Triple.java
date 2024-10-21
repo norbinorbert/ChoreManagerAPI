@@ -27,10 +27,15 @@ public class Triple<L, M, R> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Triple<?, ?, ?> triple = (Triple<?, ?, ?>) o;
-        return Objects.equals(left, triple.left) && Objects.equals(middle, triple.middle) && Objects.equals(right, triple.right);
+        return Objects.equals(left, triple.left) && Objects.equals(middle, triple.middle)
+                && Objects.equals(right, triple.right);
     }
 
     @Override

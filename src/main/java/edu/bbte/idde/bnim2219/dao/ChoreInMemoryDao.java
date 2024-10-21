@@ -15,17 +15,17 @@ public class ChoreInMemoryDao implements Dao<Chore> {
     // creates a new chore and returns its it
     @Override
     public Long create(Chore chore) {
-        Long ID = id.incrementAndGet();
-        chore.setId(ID);
-        toDoList.put(ID, chore);
-        return ID;
+        Long id = this.id.incrementAndGet();
+        chore.setId(id);
+        toDoList.put(id, chore);
+        return id;
     }
 
     // returns the chore with the provided ID
     @Override
-    public Chore findById(Long ID) throws NotFoundException {
-        Chore chore = toDoList.get(ID);
-        if(chore == null){
+    public Chore findById(Long id) throws NotFoundException {
+        Chore chore = toDoList.get(id);
+        if (chore == null) {
             throw new NotFoundException();
         }
         return chore;
@@ -39,22 +39,22 @@ public class ChoreInMemoryDao implements Dao<Chore> {
 
     // updates the chore that has the provided ID, used data from the provided chore
     @Override
-    public void update(Long ID, Chore chore) throws NotFoundException {
-        Chore existingChore = toDoList.get(ID);
-        if (existingChore == null){
+    public void update(Long id, Chore chore) throws NotFoundException {
+        Chore existingChore = toDoList.get(id);
+        if (existingChore == null) {
             throw new NotFoundException();
         }
-        chore.setId(ID);
-        toDoList.put(ID, chore);
+        chore.setId(id);
+        toDoList.put(id, chore);
     }
 
     // deleted the chore that has the provided ID
     @Override
-    public void delete(Long ID) throws NotFoundException {
-        Chore existingChore = toDoList.get(ID);
-        if(existingChore == null){
+    public void delete(Long id) throws NotFoundException {
+        Chore existingChore = toDoList.get(id);
+        if (existingChore == null) {
             throw new NotFoundException();
         }
-        toDoList.remove(ID);
+        toDoList.remove(id);
     }
 }

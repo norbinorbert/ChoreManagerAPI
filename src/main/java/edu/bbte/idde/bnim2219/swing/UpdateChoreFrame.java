@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 // frame where user can update an existing chore
-public class UpdateChoreFrame extends JFrame{
+public class UpdateChoreFrame extends JFrame {
     private final JButton okButton = new JButton("Ok");
     private final JButton cancelButton = new JButton("Cancel");
     private final JTextArea titleText = new JTextArea();
@@ -26,7 +26,7 @@ public class UpdateChoreFrame extends JFrame{
     private final JCheckBox doneBox = new JCheckBox();
 
     // set the text areas according to the input data
-    public UpdateChoreFrame(Chore chore, SimpleDateFormat simpleDateFormat){
+    public UpdateChoreFrame(Chore chore, SimpleDateFormat simpleDateFormat) {
         setSize(new Dimension(400, 400));
         setResizable(false);
         setTitle("Update chore");
@@ -67,9 +67,9 @@ public class UpdateChoreFrame extends JFrame{
     }
 
     // after validating the input, return a chore with the provided data
-    public Chore getUpdatedChore(){
+    public Chore getUpdatedChore() {
         Pair<Date, Integer> pair = validateInput();
-        if(pair == null){
+        if (pair == null) {
             return null;
         }
         return new Chore(0L, titleText.getText(), descriptionText.getText(), pair.getFirst(),
@@ -78,14 +78,14 @@ public class UpdateChoreFrame extends JFrame{
 
     // check if there is a title, date is in correct format and priority level is an integer
     // return the date and integer, so they don't need to parsed again
-    private Pair<Date, Integer> validateInput(){
-        if(titleText.getText().isEmpty()){
+    private Pair<Date, Integer> validateInput() {
+        if (titleText.getText().isEmpty()) {
             new ErrorFrame(this, "You must provide a title");
             return null;
         }
 
         Date date;
-        try{
+        try {
             date = new SimpleDateFormat("yyyy/MM/dd").parse(dateText.getText());
         } catch (ParseException e) {
             new ErrorFrame(this, "Invalid date format");
@@ -95,8 +95,7 @@ public class UpdateChoreFrame extends JFrame{
         int priorityLevel;
         try {
             priorityLevel = Integer.parseInt(priorityText.getText());
-        }
-        catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             new ErrorFrame(this, "Invalid priority level. It must be an integer");
             return null;
         }

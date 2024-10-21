@@ -21,13 +21,19 @@ public class Chore extends BaseEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
         Chore chore = (Chore) o;
-        return Objects.equals(title, chore.title) && Objects.equals(description, chore.description) &&
-                Objects.equals(deadline, chore.deadline) && Objects.equals(priorityLevel, chore.priorityLevel) &&
-                Objects.equals(done, chore.done);
+        return Objects.equals(title, chore.title) && Objects.equals(description, chore.description)
+                && Objects.equals(deadline, chore.deadline) && Objects.equals(priorityLevel, chore.priorityLevel)
+                && Objects.equals(done, chore.done);
     }
 
     @Override

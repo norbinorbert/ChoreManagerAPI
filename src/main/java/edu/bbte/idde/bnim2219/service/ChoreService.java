@@ -15,11 +15,10 @@ public class ChoreService {
         return data.create(chore);
     }
 
-    public Chore findById(Long ID) throws NotFoundServiceException {
+    public Chore findById(Long id) throws NotFoundServiceException {
         try {
-            return data.findById(ID);
-        }
-        catch (NotFoundException e){
+            return data.findById(id);
+        } catch (NotFoundException e) {
             throw new NotFoundServiceException();
         }
     }
@@ -31,8 +30,7 @@ public class ChoreService {
     public void update(Long id, Chore chore) throws NotFoundServiceException {
         try {
             data.update(id, chore);
-        }
-        catch (NotFoundException e){
+        } catch (NotFoundException e) {
             throw new NotFoundServiceException();
         }
     }
@@ -40,8 +38,7 @@ public class ChoreService {
     public void delete(Long id) throws NotFoundServiceException {
         try {
             data.delete(id);
-        }
-        catch (NotFoundException e){
+        } catch (NotFoundException e) {
             throw new NotFoundServiceException();
         }
     }
