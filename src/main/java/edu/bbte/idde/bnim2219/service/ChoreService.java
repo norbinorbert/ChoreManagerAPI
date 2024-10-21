@@ -1,6 +1,7 @@
 package edu.bbte.idde.bnim2219.service;
 
-import edu.bbte.idde.bnim2219.dao.ChoreInMemoryDao;
+import edu.bbte.idde.bnim2219.dao.ChoreDao;
+import edu.bbte.idde.bnim2219.dao.DaoFactory;
 import edu.bbte.idde.bnim2219.dao.exceptions.NotFoundException;
 import edu.bbte.idde.bnim2219.model.Chore;
 import edu.bbte.idde.bnim2219.service.exceptions.NotFoundServiceException;
@@ -9,7 +10,7 @@ import java.util.Collection;
 
 // proxy service for now
 public class ChoreService {
-    private final ChoreInMemoryDao data = new ChoreInMemoryDao();
+    private final ChoreDao data = DaoFactory.getInstance().getChoreDao();
 
     public Long create(Chore chore) {
         return data.create(chore);
