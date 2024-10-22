@@ -31,7 +31,9 @@ public class ErrorFrame extends JFrame {
 
     private static class MyWindowAdapter extends WindowAdapter {
         private final JFrame frame;
+
         public MyWindowAdapter(JFrame frame) {
+            super();
             this.frame = frame;
         }
 

@@ -7,7 +7,7 @@ application {
     mainClass='edu.bbte.idde.bnim2219.swing.MainFrame'
 }
 
-apply from: "lint.gradle"
+apply from: 'lint.gradle'
 
 repositories {
     mavenCentral()
