@@ -5,13 +5,14 @@ import edu.bbte.idde.bnim2219.dao.exceptions.NotFoundException;
 import edu.bbte.idde.bnim2219.model.BaseEntity;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 // class that implements the CRUD functions, stores data in memory in a map
 public abstract class MemoryDao<T extends BaseEntity> implements Dao<T> {
-    private final ConcurrentHashMap<Long, T> entities = new ConcurrentHashMap<>();
-    private final AtomicLong id = new AtomicLong(0L);
+    protected final Map<Long, T> entities = new ConcurrentHashMap<>();
+    protected final AtomicLong id = new AtomicLong(0L);
 
     // creates a new entity and returns its id
     @Override

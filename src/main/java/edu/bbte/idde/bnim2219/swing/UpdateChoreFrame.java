@@ -1,7 +1,8 @@
 package edu.bbte.idde.bnim2219.swing;
 
 import edu.bbte.idde.bnim2219.model.Chore;
-import edu.bbte.idde.bnim2219.model.Pair;
+import edu.bbte.idde.bnim2219.utils.Pair;
+import lombok.Getter;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -17,7 +18,9 @@ import java.util.Date;
 
 // frame where user can update an existing chore
 public class UpdateChoreFrame extends JFrame {
+    @Getter
     private final JButton okButton = new JButton("Ok");
+    @Getter
     private final JButton cancelButton = new JButton("Cancel");
     private final JTextArea titleText = new JTextArea();
     private final JTextArea descriptionText = new JTextArea();
@@ -72,7 +75,7 @@ public class UpdateChoreFrame extends JFrame {
         if (pair == null) {
             return null;
         }
-        return new Chore(0L, titleText.getText(), descriptionText.getText(), pair.getFirst(),
+        return new Chore(titleText.getText(), descriptionText.getText(), pair.getFirst(),
                 pair.getSecond(), doneBox.isSelected());
     }
 
@@ -100,13 +103,5 @@ public class UpdateChoreFrame extends JFrame {
             return null;
         }
         return new Pair<>(date, priorityLevel);
-    }
-
-    public JButton getOkButton() {
-        return okButton;
-    }
-
-    public JButton getCancelButton() {
-        return cancelButton;
     }
 }

@@ -20,7 +20,7 @@ public class ChoreService {
         try {
             return data.findById(id);
         } catch (NotFoundException e) {
-            throw new NotFoundServiceException();
+            throw new NotFoundServiceException(e);
         }
     }
 
@@ -32,7 +32,7 @@ public class ChoreService {
         try {
             data.update(id, chore);
         } catch (NotFoundException e) {
-            throw new NotFoundServiceException();
+            throw new NotFoundServiceException(e);
         }
     }
 
@@ -40,7 +40,7 @@ public class ChoreService {
         try {
             data.delete(id);
         } catch (NotFoundException e) {
-            throw new NotFoundServiceException();
+            throw new NotFoundServiceException(e);
         }
     }
 }

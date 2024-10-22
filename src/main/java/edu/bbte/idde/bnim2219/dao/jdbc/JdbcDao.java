@@ -1,35 +1,28 @@
 package edu.bbte.idde.bnim2219.dao.jdbc;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import edu.bbte.idde.bnim2219.dao.Dao;
-import edu.bbte.idde.bnim2219.dao.exceptions.NotFoundException;
 import edu.bbte.idde.bnim2219.model.BaseEntity;
 
-import java.util.Collection;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.SQLException;
 
-public class JdbcDao<T extends BaseEntity> implements Dao<T> {
-    @Override
-    public Long create(T entity) {
-        return 0L;
+public abstract class JdbcDao<T extends BaseEntity> implements Dao<T> {
+    private final HikariDataSource dataSource;
+
+    protected JdbcDao() {
+        var config = new HikariConfig();
+        config.setJdbcUrl("jdbc:mysql://localhost:3306/idde");
+        config.setUsername("root");
+        config.setPassword("admin");
+        config.setDriverClassName("com.mysql.jdbc.Driver");
+
+        dataSource = new HikariDataSource(config);
     }
 
-    @Override
-    public T findById(Long id) throws NotFoundException {
-        return null;
-    }
-
-    @Override
-    public Collection<T> findAll() {
-        return List.of();
-    }
-
-    @Override
-    public void update(Long id, T entity) throws NotFoundException {
-
-    }
-
-    @Override
-    public void delete(Long id) throws NotFoundException {
-
+    // TODO: error handling (either here or in child)
+    protected Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
     }
 }
