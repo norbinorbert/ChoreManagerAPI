@@ -11,9 +11,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 // frame where user can input data for a new chore
 public class NewChoreFrame extends JFrame {
@@ -77,7 +77,7 @@ public class NewChoreFrame extends JFrame {
 
         Date date;
         try {
-            date = new SimpleDateFormat("yyyy/MM/dd").parse(dateText.getText());
+            date = new Date(new SimpleDateFormat("yyyy/MM/dd").parse(dateText.getText()).getTime());
         } catch (ParseException e) {
             new ErrorFrame(this, "Invalid date format");
             return null;

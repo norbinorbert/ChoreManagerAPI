@@ -19,19 +19,26 @@ public class ButtonPanel extends JPanel {
         // buttons will fill the whole width
         JButton addButton = new JButton("Add new chore");
         add(addButton);
-        addButton.setPreferredSize(new Dimension(MainFrame.DEFAULT_WIDTH / 3 - 3 * flowLayout.getHgap(),
+        addButton.setPreferredSize(new Dimension(MainFrame.DEFAULT_WIDTH / 4 - 3 * flowLayout.getHgap(),
                 BUTTON_HEIGHT));
         addButton.addActionListener(e -> displayPanel.addNewChore());
 
+        // buttons will fill the whole width
+        JButton refreshButton = new JButton("Refresh to-do list");
+        add(refreshButton);
+        refreshButton.setPreferredSize(new Dimension(MainFrame.DEFAULT_WIDTH / 4 - 3 * flowLayout.getHgap(),
+                BUTTON_HEIGHT));
+        refreshButton.addActionListener(e -> displayPanel.refresh());
+
         JButton updateButton = new JButton("Update selected chore");
         add(updateButton);
-        updateButton.setPreferredSize(new Dimension(MainFrame.DEFAULT_WIDTH / 3 - 3 * flowLayout.getHgap(),
+        updateButton.setPreferredSize(new Dimension(MainFrame.DEFAULT_WIDTH / 4 - 3 * flowLayout.getHgap(),
                 BUTTON_HEIGHT));
         updateButton.addActionListener(e -> displayPanel.updateSelected());
 
         JButton deleteButton = new JButton("Delete selected chores");
         add(deleteButton);
-        deleteButton.setPreferredSize(new Dimension(MainFrame.DEFAULT_WIDTH / 3 - 3 * flowLayout.getHgap(),
+        deleteButton.setPreferredSize(new Dimension(MainFrame.DEFAULT_WIDTH / 4 - 3 * flowLayout.getHgap(),
                 BUTTON_HEIGHT));
         deleteButton.addActionListener(e -> displayPanel.deleteSelected());
     }

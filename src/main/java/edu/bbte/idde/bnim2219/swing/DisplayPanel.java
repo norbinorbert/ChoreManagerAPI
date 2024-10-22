@@ -2,7 +2,7 @@ package edu.bbte.idde.bnim2219.swing;
 
 import edu.bbte.idde.bnim2219.model.Chore;
 import edu.bbte.idde.bnim2219.service.ChoreService;
-import edu.bbte.idde.bnim2219.service.exceptions.NotFoundServiceException;
+import edu.bbte.idde.bnim2219.service.exceptions.ServiceNotAvailableException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,6 +16,7 @@ import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 
 // panel that displays all the chores in a table
 public class DisplayPanel extends JPanel {
@@ -33,6 +34,14 @@ public class DisplayPanel extends JPanel {
         String[] columnNames = { "ID", "Title", "Description", "Deadline", "Priority Level", "Done?" };
         String[][] chores = {};
         tableModel = new CustomTableModel(chores, columnNames);
+        try {
+            Collection<Chore> choresList = choreService.findAll();
+            choresList.forEach(chore -> tableModel.addRow(new String[]{String.valueOf(chore.getId()),
+                    chore.getTitle(), chore.getDescription(), simpleDateFormat.format(chore.getDeadline()),
+                    String.valueOf(chore.getPriorityLevel()), String.valueOf(chore.getDone())}));
+        } catch (ServiceNotAvailableException e) {
+            new ErrorFrame(this.frame, "Couldn't load chores. Please refresh");
+        }
 
         toDoList = new JTable(tableModel);
         toDoList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -75,13 +84,18 @@ public class DisplayPanel extends JPanel {
         addChoreFrame.getOkButton().addActionListener(e -> {
             Chore newChore = addChoreFrame.getNewChore();
             if (newChore != null) {
-                Long newChoreId = choreService.create(newChore);
-                tableModel.addRow(new String[]{newChoreId.toString(), newChore.getTitle(),
-                        newChore.getDescription(), simpleDateFormat.format(newChore.getDeadline()),
-                        newChore.getPriorityLevel().toString(), newChore.getDone().toString()});
-                addChoreFrame.dispose();
-                frame.setEnabled(true);
-                frame.requestFocus();
+                Long newChoreId;
+                try {
+                    newChoreId = choreService.create(newChore);
+                    tableModel.addRow(new String[]{newChoreId.toString(), newChore.getTitle(),
+                            newChore.getDescription(), simpleDateFormat.format(newChore.getDeadline()),
+                            newChore.getPriorityLevel().toString(), newChore.getDone().toString()});
+                    frame.setEnabled(true);
+                } catch (ServiceNotAvailableException ex) {
+                    new ErrorFrame(this.frame, "Couldn't create new chore");
+                } finally {
+                    addChoreFrame.dispose();
+                }
             }
         });
 
@@ -93,6 +107,18 @@ public class DisplayPanel extends JPanel {
         });
 
         addChoreFrame.setVisible(true);
+    }
+
+    public void refresh() {
+        tableModel.setRowCount(0);
+        try {
+            Collection<Chore> choresList = choreService.findAll();
+            choresList.forEach(chore -> tableModel.addRow(new String[]{String.valueOf(chore.getId()),
+                    chore.getTitle(), chore.getDescription(), simpleDateFormat.format(chore.getDeadline()),
+                    String.valueOf(chore.getPriorityLevel()), String.valueOf(chore.getDone())}));
+        } catch (ServiceNotAvailableException e) {
+            new ErrorFrame(this.frame, "Couldn't load chores. Please refresh");
+        }
     }
 
     // updates the selected chore
@@ -109,7 +135,7 @@ public class DisplayPanel extends JPanel {
         Chore chore;
         try {
             chore = choreService.findById(id);
-        } catch (NotFoundServiceException e) {
+        } catch (ServiceNotAvailableException e) {
             new ErrorFrame(frame, "Chore doesn't exist or has been deleted");
             tableModel.removeRow(rowIndex);
             return;
@@ -137,14 +163,14 @@ public class DisplayPanel extends JPanel {
                 tableModel.removeRow(rowIndex);
                 try {
                     choreService.update(id, updatedChore);
-                } catch (NotFoundServiceException exception) {
+                } catch (ServiceNotAvailableException exception) {
                     new ErrorFrame(frame, "Chore doesn't exist or has been deleted");
                     return;
                 }
 
-                tableModel.insertRow(rowIndex, new String[]{id.toString(), updatedChore.getTitle(),
+                tableModel.insertRow(rowIndex, new String[]{String.valueOf(id), updatedChore.getTitle(),
                         updatedChore.getDescription(), simpleDateFormat.format(updatedChore.getDeadline()),
-                        updatedChore.getPriorityLevel().toString(), updatedChore.getDone().toString()});
+                        String.valueOf(updatedChore.getPriorityLevel()), String.valueOf(updatedChore.getDone())});
                 updateChoreFrame.dispose();
                 frame.setEnabled(true);
                 frame.requestFocus();
@@ -174,7 +200,7 @@ public class DisplayPanel extends JPanel {
         // if chore doesn't exist, remove it from the visual interface
         try {
             choreService.delete(id);
-        } catch (NotFoundServiceException e) {
+        } catch (ServiceNotAvailableException e) {
             new ErrorFrame(frame, "Chore already deleted");
         } finally {
             tableModel.removeRow(rowIndex);
