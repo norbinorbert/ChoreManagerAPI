@@ -14,6 +14,7 @@ import java.awt.GridLayout;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 // frame where user can input data for a new chore
 public class NewChoreFrame extends JFrame {
@@ -27,6 +28,7 @@ public class NewChoreFrame extends JFrame {
     private final JTextArea priorityText = new JTextArea();
 
     public NewChoreFrame() {
+        super();
         setSize(new Dimension(400, 300));
         setResizable(false);
         setTitle("New chore");
@@ -77,7 +79,7 @@ public class NewChoreFrame extends JFrame {
 
         Date date;
         try {
-            date = new Date(new SimpleDateFormat("yyyy/MM/dd").parse(dateText.getText()).getTime());
+            date = new Date(new SimpleDateFormat("yyyy/MM/dd", Locale.US).parse(dateText.getText()).getTime());
         } catch (ParseException e) {
             new ErrorFrame(this, "Invalid date format");
             return null;

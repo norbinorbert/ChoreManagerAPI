@@ -7,10 +7,11 @@ import edu.bbte.idde.bnim2219.dao.exceptions.NotFoundException;
 import edu.bbte.idde.bnim2219.model.Chore;
 import edu.bbte.idde.bnim2219.service.exceptions.ServiceNotAvailableException;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 // proxy service for now
-public class ChoreService {
+public class ChoreService implements Serializable {
     private final ChoreDao data = DaoFactory.getInstance().getChoreDao();
 
     public Long create(Chore chore) throws ServiceNotAvailableException {

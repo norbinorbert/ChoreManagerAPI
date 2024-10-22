@@ -11,7 +11,7 @@ public class ButtonPanel extends JPanel {
     private static final Integer BUTTON_HEIGHT = 50;
 
     public ButtonPanel(DisplayPanel displayPanel) {
-
+        super();
         FlowLayout flowLayout = new FlowLayout();
         setLayout(flowLayout);
         setBackground(Color.LIGHT_GRAY);

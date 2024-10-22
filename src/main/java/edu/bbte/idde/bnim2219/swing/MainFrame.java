@@ -10,6 +10,7 @@ public class MainFrame extends JFrame {
     public static final Integer DEFAULT_HEIGHT = 600;
 
     public MainFrame() {
+        super();
         setSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
         setResizable(false);
         setLayout(new BorderLayout());

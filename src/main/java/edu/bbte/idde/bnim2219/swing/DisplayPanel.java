@@ -17,6 +17,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Locale;
 
 // panel that displays all the chores in a table
 public class DisplayPanel extends JPanel {
@@ -24,9 +25,10 @@ public class DisplayPanel extends JPanel {
     private final JTable toDoList;
     private final DefaultTableModel tableModel;
     private final JFrame frame;
-    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
 
     public DisplayPanel(JFrame frame) {
+        super();
         this.frame = frame;
         setBackground(Color.LIGHT_GRAY);
 
@@ -55,7 +57,7 @@ public class DisplayPanel extends JPanel {
     }
 
     private static class CustomTableModel extends DefaultTableModel {
-        public CustomTableModel(Object[][] data, Object[] columnNames) {
+        public CustomTableModel(String[][] data, String... columnNames) {
             super(data, columnNames);
         }
 

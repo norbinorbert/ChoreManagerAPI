@@ -14,10 +14,6 @@ import java.util.Collection;
 @Slf4j
 public class ChoreInJdbcDao extends JdbcDao<Chore> implements ChoreDao {
 
-    public ChoreInJdbcDao() {
-        super();
-    }
-
     // creates a new chore and returns its id
     @Override
     public synchronized Long create(Chore entity) throws BackendNotAvailableException {

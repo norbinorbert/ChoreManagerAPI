@@ -11,6 +11,7 @@ import java.awt.event.WindowEvent;
 public class ErrorFrame extends JFrame {
 
     public ErrorFrame(JFrame parentFrame, String message) {
+        super();
         parentFrame.setEnabled(false);
 
         setTitle("Error");
@@ -24,13 +25,20 @@ public class ErrorFrame extends JFrame {
         errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         // re-enables parent frame when closed
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                super.windowClosing(e);
-                parentFrame.setEnabled(true);
-            }
-        });
+        addWindowListener(new MyWindowAdapter(parentFrame));
         setVisible(true);
+    }
+
+    private static class MyWindowAdapter extends WindowAdapter {
+        private final JFrame frame;
+        public MyWindowAdapter(JFrame frame) {
+            this.frame = frame;
+        }
+
+        @Override
+        public void windowClosing(WindowEvent e) {
+            super.windowClosing(e);
+            frame.setEnabled(true);
+        }
     }
 }
