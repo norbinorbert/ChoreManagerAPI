@@ -34,7 +34,7 @@ public class ChoreInJdbcDao extends JdbcDao<Chore> implements ChoreDao {
                 return keys.getLong(1);
             }
         } catch (SQLException e) {
-            log.info("Failed to insert line into chores due to server error");
+            log.info("Failed to insert line into chores due to server error: {}", e.getMessage());
             throw new BackendNotAvailableException(e);
         }
     }
@@ -59,7 +59,7 @@ public class ChoreInJdbcDao extends JdbcDao<Chore> implements ChoreDao {
                     log.info("Successfully found chore");
                     return chore;
                 } else {
-                    log.info("Failed to find chores because it doesn't exist");
+                    log.info("Failed to find chore because it doesn't exist");
                     throw new NotFoundException();
                 }
             }
