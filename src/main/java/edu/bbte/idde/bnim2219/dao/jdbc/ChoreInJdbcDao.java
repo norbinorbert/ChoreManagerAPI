@@ -30,13 +30,27 @@ public class ChoreInJdbcDao extends JdbcDao<Chore> implements ChoreDao {
                 preparedStatement.executeUpdate();
                 var keys = preparedStatement.getGeneratedKeys();
                 log.info("Inserted a line into chores");
-                keys.next();
-                return keys.getLong(1);
+                if (keys.next()) {
+                    return keys.getLong(1);
+                } else {
+                    return 0L;
+                }
             }
         } catch (SQLException e) {
-            log.info("Failed to insert line into chores due to server error: {}", e.getMessage());
+            log.error("Failed to insert line into chores due to server error: {}", e.getMessage());
             throw new BackendNotAvailableException(e);
         }
+    }
+
+    private Chore createChoreFromResultSet(ResultSet resultSet) throws SQLException {
+        Chore chore = new Chore();
+        chore.setId(resultSet.getLong("choreID"));
+        chore.setTitle(resultSet.getString("title"));
+        chore.setDescription(resultSet.getString("description"));
+        chore.setDeadline(resultSet.getDate("deadline"));
+        chore.setPriorityLevel(resultSet.getInt("priorityLevel"));
+        chore.setDone(resultSet.getBoolean("done"));
+        return chore;
     }
 
     // returns the chore with the provided ID
@@ -49,22 +63,16 @@ public class ChoreInJdbcDao extends JdbcDao<Chore> implements ChoreDao {
                 preparedStatement.setLong(1, id);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
-                    Chore chore = new Chore();
-                    chore.setId(resultSet.getLong("choreID"));
-                    chore.setTitle(resultSet.getString("title"));
-                    chore.setDescription(resultSet.getString("description"));
-                    chore.setDeadline(resultSet.getDate("deadline"));
-                    chore.setPriorityLevel(resultSet.getInt("priorityLevel"));
-                    chore.setDone(resultSet.getBoolean("done"));
+                    Chore chore = createChoreFromResultSet(resultSet);
                     log.info("Successfully found chore");
                     return chore;
                 } else {
-                    log.info("Failed to find chore because it doesn't exist");
+                    log.warn("Failed to find chore because it doesn't exist");
                     throw new NotFoundException();
                 }
             }
         } catch (SQLException e) {
-            log.warn("Failed to find chore due to server error: {}", e.getMessage());
+            log.error("Failed to find chore due to server error: {}", e.getMessage());
             throw new BackendNotAvailableException(e);
         }
     }
@@ -79,20 +87,13 @@ public class ChoreInJdbcDao extends JdbcDao<Chore> implements ChoreDao {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 Collection<Chore> chores = new ArrayList<>();
                 while (resultSet.next()) {
-                    Chore chore = new Chore();
-                    chore.setId(resultSet.getLong("choreID"));
-                    chore.setTitle(resultSet.getString("title"));
-                    chore.setDescription(resultSet.getString("description"));
-                    chore.setDeadline(resultSet.getDate("deadline"));
-                    chore.setPriorityLevel(resultSet.getInt("priorityLevel"));
-                    chore.setDone(resultSet.getBoolean("done"));
-                    chores.add(chore);
+                    chores.add(createChoreFromResultSet(resultSet));
                 }
                 log.info("Successfully found all chores");
                 return chores;
             }
         } catch (SQLException e) {
-            log.warn("Failed to find chores due to server error: {}", e.getMessage());
+            log.error("Failed to find chores due to server error: {}", e.getMessage());
             throw new BackendNotAvailableException(e);
         }
     }
@@ -112,13 +113,13 @@ public class ChoreInJdbcDao extends JdbcDao<Chore> implements ChoreDao {
                 preparedStatement.setBoolean(5, entity.getDone());
                 preparedStatement.setLong(6, id);
                 if (preparedStatement.executeUpdate() == 0) {
-                    log.info("Couldn't update chore because it likely doesn't exist");
+                    log.warn("Couldn't update chore because it likely doesn't exist");
                     throw new NotFoundException();
                 }
                 log.info("Successfully updated chore");
             }
         } catch (SQLException e) {
-            log.warn("Failed to update chore due to server error: {}", e.getMessage());
+            log.error("Failed to update chore due to server error: {}", e.getMessage());
             throw new BackendNotAvailableException(e);
         }
     }
@@ -132,13 +133,13 @@ public class ChoreInJdbcDao extends JdbcDao<Chore> implements ChoreDao {
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setLong(1, id);
                 if (preparedStatement.executeUpdate() == 0) {
-                    log.info("Couldn't delete chore because it likely doesn't exist");
+                    log.warn("Couldn't delete chore because it likely doesn't exist");
                     throw new NotFoundException();
                 }
                 log.info("Successfully deleted chore");
             }
         } catch (SQLException e) {
-            log.warn("Failed to delete chore due to server error: {}", e.getMessage());
+            log.error("Failed to delete chore due to server error: {}", e.getMessage());
             throw new BackendNotAvailableException(e);
         }
     }
