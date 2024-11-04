@@ -1,48 +1,56 @@
 package edu.bbte.idde.bnim2219.service;
 
-import edu.bbte.idde.bnim2219.dao.ChoreInMemoryDao;
+import edu.bbte.idde.bnim2219.dao.ChoreDao;
+import edu.bbte.idde.bnim2219.dao.DaoFactory;
+import edu.bbte.idde.bnim2219.dao.exceptions.BackendNotAvailableException;
 import edu.bbte.idde.bnim2219.dao.exceptions.NotFoundException;
 import edu.bbte.idde.bnim2219.model.Chore;
-import edu.bbte.idde.bnim2219.service.exceptions.NotFoundServiceException;
+import edu.bbte.idde.bnim2219.service.exceptions.ServiceNotAvailableException;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 // proxy service for now
-public class ChoreService {
-    private final ChoreInMemoryDao data = new ChoreInMemoryDao();
+public class ChoreService implements Serializable {
+    private final ChoreDao data = DaoFactory.getInstance().getChoreDao();
 
-    public Long create(Chore chore) {
-        return data.create(chore);
-    }
-
-    public Chore findById(Long ID) throws NotFoundServiceException {
+    public Long create(Chore chore) throws ServiceNotAvailableException {
         try {
-            return data.findById(ID);
-        }
-        catch (NotFoundException e){
-            throw new NotFoundServiceException();
+            return data.create(chore);
+        } catch (BackendNotAvailableException e) {
+            throw new ServiceNotAvailableException(e);
         }
     }
 
-    public Collection<Chore> findAll() {
-        return data.findAll();
+    public Chore findById(Long id) throws ServiceNotAvailableException {
+        try {
+            return data.findById(id);
+        } catch (BackendNotAvailableException | NotFoundException e) {
+            throw new ServiceNotAvailableException(e);
+        }
     }
 
-    public void update(Long id, Chore chore) throws NotFoundServiceException {
+    public Collection<Chore> findAll() throws ServiceNotAvailableException {
+        try {
+            return data.findAll();
+        } catch (BackendNotAvailableException e) {
+            throw new ServiceNotAvailableException(e);
+        }
+    }
+
+    public void update(Long id, Chore chore) throws ServiceNotAvailableException {
         try {
             data.update(id, chore);
-        }
-        catch (NotFoundException e){
-            throw new NotFoundServiceException();
+        } catch (BackendNotAvailableException | NotFoundException e) {
+            throw new ServiceNotAvailableException(e);
         }
     }
 
-    public void delete(Long id) throws NotFoundServiceException {
+    public void delete(Long id) throws ServiceNotAvailableException {
         try {
             data.delete(id);
-        }
-        catch (NotFoundException e){
-            throw new NotFoundServiceException();
+        } catch (BackendNotAvailableException | NotFoundException e) {
+            throw new ServiceNotAvailableException(e);
         }
     }
 }

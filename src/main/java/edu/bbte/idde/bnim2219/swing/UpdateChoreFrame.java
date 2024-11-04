@@ -1,7 +1,8 @@
 package edu.bbte.idde.bnim2219.swing;
 
 import edu.bbte.idde.bnim2219.model.Chore;
-import edu.bbte.idde.bnim2219.model.Pair;
+import edu.bbte.idde.bnim2219.utils.Pair;
+import lombok.Getter;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -11,13 +12,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Locale;
 
 // frame where user can update an existing chore
-public class UpdateChoreFrame extends JFrame{
+public class UpdateChoreFrame extends JFrame {
+    @Getter
     private final JButton okButton = new JButton("Ok");
+    @Getter
     private final JButton cancelButton = new JButton("Cancel");
     private final JTextArea titleText = new JTextArea();
     private final JTextArea descriptionText = new JTextArea();
@@ -26,7 +30,8 @@ public class UpdateChoreFrame extends JFrame{
     private final JCheckBox doneBox = new JCheckBox();
 
     // set the text areas according to the input data
-    public UpdateChoreFrame(Chore chore, SimpleDateFormat simpleDateFormat){
+    public UpdateChoreFrame(Chore chore, SimpleDateFormat simpleDateFormat) {
+        super();
         setSize(new Dimension(400, 400));
         setResizable(false);
         setTitle("Update chore");
@@ -67,26 +72,26 @@ public class UpdateChoreFrame extends JFrame{
     }
 
     // after validating the input, return a chore with the provided data
-    public Chore getUpdatedChore(){
+    public Chore getUpdatedChore() {
         Pair<Date, Integer> pair = validateInput();
-        if(pair == null){
+        if (pair == null) {
             return null;
         }
-        return new Chore(0L, titleText.getText(), descriptionText.getText(), pair.getFirst(),
+        return new Chore(titleText.getText(), descriptionText.getText(), pair.getFirst(),
                 pair.getSecond(), doneBox.isSelected());
     }
 
     // check if there is a title, date is in correct format and priority level is an integer
     // return the date and integer, so they don't need to parsed again
-    private Pair<Date, Integer> validateInput(){
-        if(titleText.getText().isEmpty()){
+    private Pair<Date, Integer> validateInput() {
+        if (titleText.getText().isEmpty()) {
             new ErrorFrame(this, "You must provide a title");
             return null;
         }
 
         Date date;
-        try{
-            date = new SimpleDateFormat("yyyy/MM/dd").parse(dateText.getText());
+        try {
+            date = new Date(new SimpleDateFormat("yyyy/MM/dd", Locale.US).parse(dateText.getText()).getTime());
         } catch (ParseException e) {
             new ErrorFrame(this, "Invalid date format");
             return null;
@@ -95,19 +100,10 @@ public class UpdateChoreFrame extends JFrame{
         int priorityLevel;
         try {
             priorityLevel = Integer.parseInt(priorityText.getText());
-        }
-        catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             new ErrorFrame(this, "Invalid priority level. It must be an integer");
             return null;
         }
         return new Pair<>(date, priorityLevel);
-    }
-
-    public JButton getOkButton() {
-        return okButton;
-    }
-
-    public JButton getCancelButton() {
-        return cancelButton;
     }
 }
