@@ -23,11 +23,11 @@ public class UpdateChoreFrame extends JFrame {
     private final JButton okButton = new JButton("Ok");
     @Getter
     private final JButton cancelButton = new JButton("Cancel");
-    private transient JTextArea titleText = new JTextArea();
-    private transient JTextArea descriptionText = new JTextArea();
-    private transient JTextArea dateText = new JTextArea();
-    private transient JTextArea priorityText = new JTextArea();
-    private transient JCheckBox doneBox = new JCheckBox();
+    private final transient JTextArea titleText = new JTextArea();
+    private final transient JTextArea descriptionText = new JTextArea();
+    private final transient JTextArea dateText = new JTextArea();
+    private final transient JTextArea priorityText = new JTextArea();
+    private final transient JCheckBox doneBox = new JCheckBox();
 
     // set the text areas according to the input data
     public UpdateChoreFrame(Chore chore, SimpleDateFormat simpleDateFormat) {

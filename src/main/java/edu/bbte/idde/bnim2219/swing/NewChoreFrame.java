@@ -22,10 +22,10 @@ public class NewChoreFrame extends JFrame {
     private final JButton okButton = new JButton("Ok");
     @Getter
     private final JButton cancelButton = new JButton("Cancel");
-    private transient JTextArea titleText = new JTextArea();
-    private transient JTextArea descriptionText = new JTextArea();
-    private transient JTextArea dateText = new JTextArea();
-    private transient JTextArea priorityText = new JTextArea();
+    private final transient JTextArea titleText = new JTextArea();
+    private final transient JTextArea descriptionText = new JTextArea();
+    private final transient JTextArea dateText = new JTextArea();
+    private final transient JTextArea priorityText = new JTextArea();
 
     public NewChoreFrame() {
         super();
