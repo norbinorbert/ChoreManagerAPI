@@ -21,11 +21,11 @@ import java.util.Locale;
 
 // panel that displays all the chores in a table
 public class DisplayPanel extends JPanel {
-    private final ChoreService choreService = new ChoreService();
-    private final JTable toDoList;
-    private final DefaultTableModel tableModel;
-    private final JFrame frame;
-    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
+    private transient final ChoreService choreService = new ChoreService();
+    private transient final JTable toDoList;
+    private transient final DefaultTableModel tableModel;
+    private transient final JFrame frame;
+    private transient final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
 
     public DisplayPanel(JFrame frame) {
         super();

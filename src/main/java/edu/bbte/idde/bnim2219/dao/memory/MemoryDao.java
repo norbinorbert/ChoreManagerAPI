@@ -13,8 +13,8 @@ import java.util.concurrent.atomic.AtomicLong;
 // class that implements the CRUD functions, stores data in memory in a map
 @Slf4j
 public abstract class MemoryDao<T extends BaseEntity> implements Dao<T> {
-    protected final Map<Long, T> entities = new ConcurrentHashMap<>();
-    protected final AtomicLong id = new AtomicLong(0L);
+    protected transient final Map<Long, T> entities = new ConcurrentHashMap<>();
+    protected transient final AtomicLong id = new AtomicLong(0L);
 
     // creates a new entity and returns its id
     @Override

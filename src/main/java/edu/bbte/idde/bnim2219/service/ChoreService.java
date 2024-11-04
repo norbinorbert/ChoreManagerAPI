@@ -12,7 +12,7 @@ import java.util.Collection;
 
 // proxy service for now
 public class ChoreService implements Serializable {
-    private final ChoreDao data = DaoFactory.getInstance().getChoreDao();
+    private transient final ChoreDao data = DaoFactory.getInstance().getChoreDao();
 
     public Long create(Chore chore) throws ServiceNotAvailableException {
         try {
