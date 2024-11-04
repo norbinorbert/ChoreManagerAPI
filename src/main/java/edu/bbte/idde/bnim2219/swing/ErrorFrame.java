@@ -30,7 +30,7 @@ public class ErrorFrame extends JFrame {
     }
 
     private static class MyWindowAdapter extends WindowAdapter {
-        private transient final JFrame frame;
+        private transient JFrame frame;
 
         public MyWindowAdapter(JFrame frame) {
             super();

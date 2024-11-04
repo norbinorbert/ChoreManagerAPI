@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 @Slf4j
 public abstract class JdbcDao<T extends BaseEntity> implements Dao<T> {
-    private transient final HikariDataSource dataSource;
+    private transient HikariDataSource dataSource;
 
     protected JdbcDao() {
         var config = new HikariConfig();
