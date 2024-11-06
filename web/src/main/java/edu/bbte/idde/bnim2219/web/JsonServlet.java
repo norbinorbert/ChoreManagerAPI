@@ -17,8 +17,8 @@ import java.sql.Date;
 
 @WebServlet("/chores")
 public class JsonServlet extends HttpServlet {
-    private ObjectMapper objectMapper;
-    private ChoreService choreService;
+    private transient ObjectMapper objectMapper;
+    private transient ChoreService choreService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
