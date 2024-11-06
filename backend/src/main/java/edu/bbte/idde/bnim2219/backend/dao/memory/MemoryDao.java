@@ -1,7 +1,7 @@
 package edu.bbte.idde.bnim2219.backend.dao.memory;
 
 import edu.bbte.idde.bnim2219.backend.dao.Dao;
-import edu.bbte.idde.bnim2219.backend.dao.exceptions.NotFoundException;
+import edu.bbte.idde.bnim2219.backend.dao.exceptions.ChoreNotFoundException;
 import edu.bbte.idde.bnim2219.backend.model.BaseEntity;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,12 +28,12 @@ public abstract class MemoryDao<T extends BaseEntity> implements Dao<T> {
 
     // returns the entity with the provided ID
     @Override
-    public T findById(Long id) throws NotFoundException {
+    public T findById(Long id) throws ChoreNotFoundException {
         T entity = entities.get(id);
         log.info("Trying to find entity by id");
         if (entity == null) {
             log.info("Couldn't find because entity doesn't exist");
-            throw new NotFoundException();
+            throw new ChoreNotFoundException();
         }
         log.info("Found entity");
         return entity;
@@ -48,12 +48,12 @@ public abstract class MemoryDao<T extends BaseEntity> implements Dao<T> {
 
     // updates the entity that has the provided ID, uses data from the provided entity
     @Override
-    public void update(Long id, T entity) throws NotFoundException {
+    public void update(Long id, T entity) throws ChoreNotFoundException {
         T existingEntity = entities.get(id);
         log.info("Trying to update entity by id");
         if (existingEntity == null) {
             log.info("Couldn't update because entity doesn't exist");
-            throw new NotFoundException();
+            throw new ChoreNotFoundException();
         }
         log.info("Successfully updated entity");
         entity.setId(id);
@@ -62,12 +62,12 @@ public abstract class MemoryDao<T extends BaseEntity> implements Dao<T> {
 
     // deletes the entity that has the provided ID
     @Override
-    public void delete(Long id) throws NotFoundException {
+    public void delete(Long id) throws ChoreNotFoundException {
         T existingEntity = entities.get(id);
         log.info("Trying to delete entity by id");
         if (existingEntity == null) {
             log.info("Couldn't delete because entity doesn't exist");
-            throw new NotFoundException();
+            throw new ChoreNotFoundException();
         }
         log.info("Successfully deleted entity");
         entities.remove(id);

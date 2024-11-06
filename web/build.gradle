@@ -2,6 +2,11 @@ plugins{
     id 'war'
 }
 
+dependencies {
+    implementation project(':backend')
+    // https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api
+    compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.1.0'
+}
 
 /**
  * Megadja a Tomcat URL alapot.

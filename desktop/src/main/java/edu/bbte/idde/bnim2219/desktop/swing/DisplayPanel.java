@@ -2,7 +2,8 @@ package edu.bbte.idde.bnim2219.desktop.swing;
 
 import edu.bbte.idde.bnim2219.backend.service.ChoreService;
 import edu.bbte.idde.bnim2219.backend.model.Chore;
-import edu.bbte.idde.bnim2219.backend.service.exceptions.ServiceNotAvailableException;
+import edu.bbte.idde.bnim2219.backend.service.exceptions.ChoreProcessingException;
+import edu.bbte.idde.bnim2219.backend.service.exceptions.UnexpectedBackendException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -41,7 +42,7 @@ public class DisplayPanel extends JPanel {
             choresList.forEach(chore -> tableModel.addRow(new String[]{String.valueOf(chore.getId()),
                     chore.getTitle(), chore.getDescription(), simpleDateFormat.format(chore.getDeadline()),
                     String.valueOf(chore.getPriorityLevel()), String.valueOf(chore.getDone())}));
-        } catch (ServiceNotAvailableException e) {
+        } catch (UnexpectedBackendException e) {
             new ErrorFrame(this.frame, "Couldn't load chores. Please refresh");
         }
 
@@ -93,7 +94,7 @@ public class DisplayPanel extends JPanel {
                             newChore.getDescription(), simpleDateFormat.format(newChore.getDeadline()),
                             newChore.getPriorityLevel().toString(), newChore.getDone().toString()});
                     frame.setEnabled(true);
-                } catch (ServiceNotAvailableException ex) {
+                } catch (UnexpectedBackendException ex) {
                     new ErrorFrame(this.frame, "Couldn't create new chore");
                 } finally {
                     addChoreFrame.dispose();
@@ -118,7 +119,7 @@ public class DisplayPanel extends JPanel {
             choresList.forEach(chore -> tableModel.addRow(new String[]{String.valueOf(chore.getId()),
                     chore.getTitle(), chore.getDescription(), simpleDateFormat.format(chore.getDeadline()),
                     String.valueOf(chore.getPriorityLevel()), String.valueOf(chore.getDone())}));
-        } catch (ServiceNotAvailableException e) {
+        } catch (UnexpectedBackendException e) {
             new ErrorFrame(this.frame, "Couldn't load chores. Please refresh");
         }
     }
@@ -137,7 +138,7 @@ public class DisplayPanel extends JPanel {
         Chore chore;
         try {
             chore = choreService.findById(id);
-        } catch (ServiceNotAvailableException e) {
+        } catch (ChoreProcessingException | UnexpectedBackendException e) {
             new ErrorFrame(frame, "Chore doesn't exist or has been deleted");
             tableModel.removeRow(rowIndex);
             return;
@@ -165,7 +166,7 @@ public class DisplayPanel extends JPanel {
                 tableModel.removeRow(rowIndex);
                 try {
                     choreService.update(id, updatedChore);
-                } catch (ServiceNotAvailableException exception) {
+                } catch (ChoreProcessingException | UnexpectedBackendException exception) {
                     new ErrorFrame(frame, "Chore doesn't exist or has been deleted");
                     return;
                 }
@@ -202,7 +203,7 @@ public class DisplayPanel extends JPanel {
         // if chore doesn't exist, remove it from the visual interface
         try {
             choreService.delete(id);
-        } catch (ServiceNotAvailableException e) {
+        } catch (ChoreProcessingException | UnexpectedBackendException e) {
             new ErrorFrame(frame, "Chore already deleted");
         } finally {
             tableModel.removeRow(rowIndex);

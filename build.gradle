@@ -11,5 +11,8 @@ subprojects {
         compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
         // https://mvnrepository.com/artifact/org.projectlombok/lombok
         annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
+        // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.18.1'
+
     }
 }
