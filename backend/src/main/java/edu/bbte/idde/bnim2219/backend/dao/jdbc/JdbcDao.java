@@ -16,6 +16,7 @@ public abstract class JdbcDao<T extends BaseEntity> implements Dao<T> {
     protected JdbcDao() {
         var config = new HikariConfig();
         config.setJdbcUrl("jdbc:mysql://localhost/idde");
+        config.setDriverClassName("com.mysql.jdbc.Driver");
         config.setUsername("root");
         config.setPassword("admin");
         config.setMaximumPoolSize(10);
