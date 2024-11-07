@@ -2,6 +2,7 @@ package edu.bbte.idde.bnim2219.backend.dao.jdbc;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import edu.bbte.idde.bnim2219.backend.config.ConfigFactory;
 import edu.bbte.idde.bnim2219.backend.dao.Dao;
 import edu.bbte.idde.bnim2219.backend.model.BaseEntity;
 import lombok.extern.slf4j.Slf4j;
@@ -15,11 +16,11 @@ public abstract class JdbcDao<T extends BaseEntity> implements Dao<T> {
 
     protected JdbcDao() {
         var config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mysql://localhost/idde");
-        config.setDriverClassName("com.mysql.jdbc.Driver");
-        config.setUsername("root");
-        config.setPassword("admin");
-        config.setMaximumPoolSize(10);
+        config.setJdbcUrl(ConfigFactory.getJdbcConfiguration().getJdbcUrl());
+        config.setDriverClassName(ConfigFactory.getJdbcConfiguration().getDriverClassName());
+        config.setUsername(ConfigFactory.getJdbcConfiguration().getUsername());
+        config.setPassword(ConfigFactory.getJdbcConfiguration().getPassword());
+        config.setMaximumPoolSize(ConfigFactory.getJdbcConfiguration().getPoolSize());
 
         dataSource = new HikariDataSource(config);
     }

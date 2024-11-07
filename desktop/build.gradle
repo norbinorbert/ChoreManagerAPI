@@ -3,7 +3,7 @@ plugins {
 }
 
 application {
-    mainClass = 'edu.bbte.idde.bnim2219.swing.MainFrame'
+    mainClass = 'edu.bbte.idde.bnim2219.desktop.swing.MainFrame'
 }
 
 dependencies {
