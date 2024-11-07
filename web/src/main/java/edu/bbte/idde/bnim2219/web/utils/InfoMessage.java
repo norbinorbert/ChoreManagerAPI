@@ -1,4 +1,4 @@
-package edu.bbte.idde.bnim2219.web;
+package edu.bbte.idde.bnim2219.web.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

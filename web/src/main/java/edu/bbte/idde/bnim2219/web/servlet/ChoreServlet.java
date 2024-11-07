@@ -1,10 +1,11 @@
-package edu.bbte.idde.bnim2219.web;
+package edu.bbte.idde.bnim2219.web.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.bbte.idde.bnim2219.backend.model.Chore;
 import edu.bbte.idde.bnim2219.backend.service.ChoreService;
 import edu.bbte.idde.bnim2219.backend.service.exceptions.ChoreProcessingException;
 import edu.bbte.idde.bnim2219.backend.service.exceptions.UnexpectedBackendException;
+import edu.bbte.idde.bnim2219.web.utils.InfoMessage;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,7 +17,7 @@ import java.io.IOException;
 import java.sql.Date;
 
 @WebServlet("/chores")
-public class JsonServlet extends HttpServlet {
+public class ChoreServlet extends HttpServlet {
     private transient ObjectMapper objectMapper;
     private transient ChoreService choreService;
 
@@ -26,8 +27,6 @@ public class JsonServlet extends HttpServlet {
         objectMapper = new ObjectMapper();
         choreService = new ChoreService();
     }
-
-    //TODO: find out why requests trigger twice from postman
 
     // returns a chore if id parameter was provided, otherwise returns all chores
     @Override
@@ -105,7 +104,6 @@ public class JsonServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Long id = null;
-        //TODO: find out how to get body parameters
         try {
             resp.setHeader("Content-Type", "application/json");
             id = Long.parseLong(req.getParameter("id"));

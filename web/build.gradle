@@ -6,6 +6,8 @@ dependencies {
     implementation project(':backend')
     // https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api
     compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.1.0'
+    // https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf
+    implementation group: 'org.thymeleaf', name: 'thymeleaf', version: '3.1.2.RELEASE'
 }
 
 /**
@@ -13,7 +15,7 @@ dependencies {
  * Pl. az alábbi beállítással a projekt context root-ja: http://localhost:8080/war-static-example/...
  * A "ROOT" értékkel a gyökérre deployolja a rendszer.
  */
-def deploymentName = 'ROOT'
+def deploymentName = 'bnim2219'
 
 // beolvassuk környezeti változóból, hogy hova van telepítve a Tomcat
 def tomcatHome = System.getenv('CATALINA_HOME')
