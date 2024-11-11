@@ -19,9 +19,11 @@ public class ConfigFactory {
         sb.append('/').append(CONFIG_FILE_PREFIX);
 
         String profile = System.getenv("IDDE");
-        log.info("Determined profile: {}", profile);
         if (profile != null && !profile.isBlank()) {
             sb.append('-').append(profile);
+            log.info("Determined profile: {}", profile);
+        } else {
+            log.info("No profile detected, using default config");
         }
         sb.append(".json");
 
