@@ -138,6 +138,12 @@ public class ChoreServlet extends HttpServlet {
                 return;
             }
             Boolean done = updateChore.getDone();
+            if (done == null) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                objectMapper.writeValue(resp.getOutputStream(),
+                        new InfoMessage("Please provide if the chore is done or not"));
+                return;
+            }
             String description = updateChore.getDescription();
             Chore chore = new Chore(title, description, date, priorityLevel, done);
             choreService.update(id, chore);
