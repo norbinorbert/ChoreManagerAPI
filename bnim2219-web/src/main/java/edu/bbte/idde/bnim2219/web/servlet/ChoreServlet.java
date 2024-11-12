@@ -41,7 +41,7 @@ public class ChoreServlet extends HttpServlet {
             }
             var chores = choreService.findAll();
             objectMapper.writeValue(resp.getOutputStream(), chores);
-        } catch (UnexpectedBackendException e) {
+        } catch (UnexpectedBackendException | IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         } catch (ChoreProcessingException e) {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -57,19 +57,30 @@ public class ChoreServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             resp.setHeader("Content-Type", "application/json");
-            String title = req.getParameter("title");
+            Chore newChore = objectMapper.readValue(req.getReader(), Chore.class);
+            String title = newChore.getTitle();
             if (title == null || title.isEmpty()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Please provide a title"));
                 return;
             }
-            String description = req.getParameter("description");
-            Date date = Date.valueOf(req.getParameter("date"));
-            Integer priorityLevel = Integer.valueOf(req.getParameter("priorityLevel"));
+            String description = newChore.getDescription();
+            Date date = newChore.getDeadline();
+            if (date == null) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Please provide a deadline"));
+                return;
+            }
+            Integer priorityLevel = newChore.getPriorityLevel();
+            if (priorityLevel == null) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Please provide a priority level"));
+                return;
+            }
             Chore chore = new Chore(title, description, date, priorityLevel, false);
             Long id = choreService.create(chore);
             objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Created new chore with id of " + id));
-        } catch (UnexpectedBackendException e) {
+        } catch (UnexpectedBackendException | IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -89,7 +100,7 @@ public class ChoreServlet extends HttpServlet {
             resp.setHeader("Content-Type", "application/json");
             choreService.delete(Long.parseLong(req.getParameter("id")));
             objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Deleted chore"));
-        } catch (UnexpectedBackendException e) {
+        } catch (UnexpectedBackendException | IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         } catch (ChoreProcessingException e) {
             resp.setStatus(HttpServletResponse.SC_GONE);
@@ -107,20 +118,31 @@ public class ChoreServlet extends HttpServlet {
         try {
             resp.setHeader("Content-Type", "application/json");
             id = Long.parseLong(req.getParameter("id"));
-            String title = req.getParameter("title");
+            Chore updateChore = objectMapper.readValue(req.getReader(), Chore.class);
+            String title = updateChore.getTitle();
             if (title == null || title.isEmpty()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Please provide a title"));
                 return;
             }
-            String description = req.getParameter("description");
-            Date date = Date.valueOf(req.getParameter("date"));
-            Integer priorityLevel = Integer.valueOf(req.getParameter("priorityLevel"));
-            Boolean done = Boolean.valueOf(req.getParameter("done"));
+            String description = updateChore.getDescription();
+            Date date = updateChore.getDeadline();
+            if (date == null) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Please provide a deadline"));
+                return;
+            }
+            Integer priorityLevel = updateChore.getPriorityLevel();
+            if (priorityLevel == null) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Please provide a priority level"));
+                return;
+            }
+            Boolean done = updateChore.getDone();
             Chore chore = new Chore(title, description, date, priorityLevel, done);
             choreService.update(id, chore);
             objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Updated chore with id of " + id));
-        } catch (UnexpectedBackendException e) {
+        } catch (UnexpectedBackendException | IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
