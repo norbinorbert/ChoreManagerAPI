@@ -64,7 +64,6 @@ public class ChoreServlet extends HttpServlet {
                 objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Please provide a title"));
                 return;
             }
-            String description = newChore.getDescription();
             Date date = newChore.getDeadline();
             if (date == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -77,6 +76,7 @@ public class ChoreServlet extends HttpServlet {
                 objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Please provide a priority level"));
                 return;
             }
+            String description = newChore.getDescription();
             Chore chore = new Chore(title, description, date, priorityLevel, false);
             Long id = choreService.create(chore);
             objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Created new chore with id of " + id));
@@ -125,7 +125,6 @@ public class ChoreServlet extends HttpServlet {
                 objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Please provide a title"));
                 return;
             }
-            String description = updateChore.getDescription();
             Date date = updateChore.getDeadline();
             if (date == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -139,6 +138,7 @@ public class ChoreServlet extends HttpServlet {
                 return;
             }
             Boolean done = updateChore.getDone();
+            String description = updateChore.getDescription();
             Chore chore = new Chore(title, description, date, priorityLevel, done);
             choreService.update(id, chore);
             objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Updated chore with id of " + id));
