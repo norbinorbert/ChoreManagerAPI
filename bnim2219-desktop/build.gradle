@@ -7,5 +7,5 @@ application {
 }
 
 dependencies {
-    implementation project(':backend')
+    implementation project(':bnim2219-backend')
 }

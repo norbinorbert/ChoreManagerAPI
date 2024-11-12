@@ -3,7 +3,7 @@ plugins{
 }
 
 dependencies {
-    implementation project(':backend')
+    implementation project(':bnim2219-backend')
     // https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api
     compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.1.0'
     // https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf
