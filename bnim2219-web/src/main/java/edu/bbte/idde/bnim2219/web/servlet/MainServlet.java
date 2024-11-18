@@ -36,6 +36,9 @@ public class MainServlet extends HttpServlet {
             ThymeleafEngineFactory.process(req, resp, "index.html", model);
         } catch (UnexpectedBackendException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            Map<String, Object> model = new ConcurrentHashMap<>();
+            model.put("message", "Unexpected error occurred. Please try again later");
+            ThymeleafEngineFactory.process(req, resp, "error.html", model);
         }
     }
 

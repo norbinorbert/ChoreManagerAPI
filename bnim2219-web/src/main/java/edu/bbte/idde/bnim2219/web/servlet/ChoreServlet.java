@@ -41,8 +41,10 @@ public class ChoreServlet extends HttpServlet {
             }
             var chores = choreService.findAll();
             objectMapper.writeValue(resp.getOutputStream(), chores);
-        } catch (UnexpectedBackendException | IOException e) {
+        } catch (UnexpectedBackendException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            objectMapper.writeValue(resp.getOutputStream(),
+                    new InfoMessage("Unexpected error occurred. Please try again later"));
         } catch (ChoreProcessingException e) {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Chore not found"));
@@ -59,29 +61,22 @@ public class ChoreServlet extends HttpServlet {
             resp.setHeader("Content-Type", "application/json");
             Chore newChore = objectMapper.readValue(req.getReader(), Chore.class);
             String title = newChore.getTitle();
-            if (title == null || title.isEmpty()) {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Please provide a title"));
-                return;
-            }
-            Date date = newChore.getDeadline();
-            if (date == null) {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Please provide a deadline"));
-                return;
-            }
+            Date deadline = newChore.getDeadline();
             Integer priorityLevel = newChore.getPriorityLevel();
-            if (priorityLevel == null) {
+            if (title == null || title.isEmpty() || deadline == null || priorityLevel == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Please provide a priority level"));
+                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Input parsing error. "
+                        + "Please check if all necessary fields have been provided (title, deadline, priorityLevel)"));
                 return;
             }
             String description = newChore.getDescription();
-            Chore chore = new Chore(title, description, date, priorityLevel, false);
+            Chore chore = new Chore(title, description, deadline, priorityLevel, false);
             Long id = choreService.create(chore);
             objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Created new chore with id of " + id));
-        } catch (UnexpectedBackendException | IOException e) {
+        } catch (UnexpectedBackendException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            objectMapper.writeValue(resp.getOutputStream(),
+                    new InfoMessage("Unexpected error occurred. Please try again later"));
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             objectMapper.writeValue(resp.getOutputStream(),
@@ -90,6 +85,11 @@ public class ChoreServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             objectMapper.writeValue(resp.getOutputStream(),
                     new InfoMessage("Bad date format. Expected format: yyyy-mm-dd"));
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            objectMapper.writeValue(resp.getOutputStream(),
+                    new InfoMessage("Input parsing error. Please check if all necessary fields have been provided "
+                            + "in the correct format (title - string, deadline - date, priorityLevel - integer)"));
         }
     }
 
@@ -100,8 +100,10 @@ public class ChoreServlet extends HttpServlet {
             resp.setHeader("Content-Type", "application/json");
             choreService.delete(Long.parseLong(req.getParameter("id")));
             objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Deleted chore"));
-        } catch (UnexpectedBackendException | IOException e) {
+        } catch (UnexpectedBackendException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            objectMapper.writeValue(resp.getOutputStream(),
+                    new InfoMessage("Unexpected error occurred. Please try again later"));
         } catch (ChoreProcessingException e) {
             resp.setStatus(HttpServletResponse.SC_GONE);
             objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Chore already deleted or didn't exist"));
@@ -109,6 +111,11 @@ public class ChoreServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Bad format for ID"));
         }
+    }
+
+    private boolean isChoreBad(Chore chore) {
+        return chore.getTitle() == null || chore.getTitle().isEmpty() || chore.getDeadline() == null
+                || chore.getPriorityLevel() == null || chore.getDone() == null;
     }
 
     //updates chore that has the provided id, uses given parameters as new values
@@ -119,31 +126,20 @@ public class ChoreServlet extends HttpServlet {
             resp.setHeader("Content-Type", "application/json");
             id = Long.parseLong(req.getParameter("id"));
             Chore updateChore = objectMapper.readValue(req.getReader(), Chore.class);
-            String title = updateChore.getTitle();
-            if (title == null || title.isEmpty()) {
+            if (isChoreBad(updateChore)) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Please provide a title"));
+                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Input parsing error. Please check"
+                        + "if all necessary fields have been provided (title, deadline, priorityLevel, done)"));
                 return;
             }
-            Date date = updateChore.getDeadline();
-            if (date == null) {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Please provide a deadline"));
-                return;
-            }
-            Integer priorityLevel = updateChore.getPriorityLevel();
-            if (priorityLevel == null) {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Please provide a priority level"));
-                return;
-            }
-            Boolean done = updateChore.getDone();
-            String description = updateChore.getDescription();
-            Chore chore = new Chore(title, description, date, priorityLevel, done);
+            Chore chore = new Chore(updateChore.getTitle(), updateChore.getDescription(), updateChore.getDeadline(),
+                    updateChore.getPriorityLevel(), updateChore.getDone());
             choreService.update(id, chore);
             objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Updated chore with id of " + id));
-        } catch (UnexpectedBackendException | IOException e) {
+        } catch (UnexpectedBackendException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            objectMapper.writeValue(resp.getOutputStream(),
+                    new InfoMessage("Unexpected error occurred. Please try again later"));
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             objectMapper.writeValue(resp.getOutputStream(),
@@ -156,6 +152,12 @@ public class ChoreServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             objectMapper.writeValue(resp.getOutputStream(),
                     new InfoMessage("Chore with id of " + id + " doesn't exist"));
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            objectMapper.writeValue(resp.getOutputStream(),
+                    new InfoMessage("Input parsing error. Please check if all necessary fields have been provided "
+                            + "in the correct format (title - string, deadline - date, priorityLevel - integer, "
+                            + "done - boolean)"));
         }
     }
 }
