@@ -1,0 +1,11 @@
+{
+  "dao": "edu.bbte.idde.bnim2219.backend.dao.jdbc.JdbcDaoFactory",
+  "jdbc": {
+    "jdbcUrl": "jdbc:mysql://localhost/idde",
+    "driverClassName": "com.mysql.cj.jdbc.Driver",
+    "username": "root",
+    "password": "admin",
+    "poolSize": 10
+  }
+}
+

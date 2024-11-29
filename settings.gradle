@@ -1,1 +1,5 @@
 rootProject.name = 'abcd1234-idde'
+include 'bnim2219-backend'
+include 'bnim2219-desktop'
+include 'bnim2219-web'
+

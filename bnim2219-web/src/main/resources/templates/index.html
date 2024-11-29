@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <link rel="stylesheet" href="./index.css" type="text/css">
+    <meta charset="UTF-8">
+    <title>Chores</title>
+</head>
+
+<body>
+    <header>
+        <form method="post">
+            <input type="submit" value="Logout">
+        </form>
+    </header>
+
+    <table>
+        <thead><tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Priority level</th>
+            <th>Done</th>
+        </tr></thead>
+        <th:block th:each="chore : ${chores}">
+            <tr>
+                <td th:text="${chore.title}"></td>
+                <td th:text="${chore.description}"></td>
+                <td th:text="${#dates.format(chore.deadLine, 'yyyy-MM-dd')}"></td>
+                <td th:text="${chore.priorityLevel}"></td>
+                <td th:text="${chore.done}"></td>
+            </tr>
+        </th:block>
+    </table>
+</body>
+
+</html>

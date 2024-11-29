@@ -1,0 +1,11 @@
+plugins {
+    id 'application'
+}
+
+application {
+    mainClass = 'edu.bbte.idde.bnim2219.desktop.swing.MainFrame'
+}
+
+dependencies {
+    implementation project(':bnim2219-backend')
+}
