@@ -1,5 +1,6 @@
-package edu.bbte.idde.bnim2219.spring.model.dto;
+package edu.bbte.idde.bnim2219.spring.model.dto.incoming;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,7 @@ import java.sql.Date;
 @AllArgsConstructor
 public class UpdateChoreDTO {
     @NotNull
+    @NotEmpty
     private String title;
     private String description;
     @NotNull
