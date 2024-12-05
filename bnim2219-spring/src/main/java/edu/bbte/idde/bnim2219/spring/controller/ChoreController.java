@@ -19,6 +19,7 @@ import java.net.URI;
 import java.util.Collection;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/chores")
 public class ChoreController {
     @Autowired
