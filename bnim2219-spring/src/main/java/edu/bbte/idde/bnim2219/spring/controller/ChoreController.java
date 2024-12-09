@@ -10,6 +10,7 @@ import edu.bbte.idde.bnim2219.spring.service.ChoreService;
 import edu.bbte.idde.bnim2219.spring.service.exceptions.ChoreProcessingException;
 import edu.bbte.idde.bnim2219.spring.service.exceptions.UnexpectedBackendException;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +28,12 @@ public class ChoreController {
     private ChoreMapper choreMapper;
 
     @GetMapping
-    public Collection<NoDescriptionChoreDTO> findAll() throws UnexpectedBackendException {
-        Collection<Chore> chores = service.findAll();
-        return choreMapper.removeDescriptionFromChores(chores);
+    public Collection<NoDescriptionChoreDTO> findAll(@PathParam("done") Boolean done)
+            throws UnexpectedBackendException {
+        if (done != null) {
+            return choreMapper.removeDescriptionFromChores(service.findChoresByDone(done));
+        }
+        return choreMapper.removeDescriptionFromChores(service.findAll());
     }
 
     @GetMapping("/{id}")

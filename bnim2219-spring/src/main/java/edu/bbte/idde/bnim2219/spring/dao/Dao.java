@@ -17,5 +17,4 @@ public interface Dao<T extends BaseEntity> {
     void update(Long id, T entity) throws ChoreNotFoundException, BackendConnectionException;
 
     void delete(Long id) throws ChoreNotFoundException, BackendConnectionException;
-
 }

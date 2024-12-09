@@ -150,4 +150,29 @@ public class ChoreInJdbcDao extends JdbcDao<Chore> implements ChoreDao {
             throw new BackendConnectionException(e);
         }
     }
+
+    @Override
+    public Collection<Chore> findChoresByDone(Boolean done) throws BackendConnectionException {
+        try (Connection connection = getConnection()) {
+            log.info("Trying to find all chores, filtered by done");
+            String query;
+            if (done) {
+                query = "select * from chores where done";
+            } else {
+                query = "select * from chores where not done";
+            }
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                ResultSet resultSet = preparedStatement.executeQuery();
+                Collection<Chore> chores = new ArrayList<>();
+                while (resultSet.next()) {
+                    chores.add(createChoreFromResultSet(resultSet));
+                }
+                log.info("Successfully found all chores, filtered by done");
+                return chores;
+            }
+        } catch (SQLException e) {
+            log.error("Failed to find chores filtered by done due to server error: {}", e.getMessage());
+            throw new BackendConnectionException(e);
+        }
+    }
 }

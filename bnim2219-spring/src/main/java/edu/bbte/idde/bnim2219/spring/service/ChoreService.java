@@ -62,4 +62,12 @@ public class ChoreService implements Serializable {
             throw new ChoreProcessingException(e);
         }
     }
+
+    public Collection<Chore> findChoresByDone(Boolean done) throws UnexpectedBackendException {
+        try {
+            return data.findChoresByDone(done);
+        } catch (BackendConnectionException e) {
+            throw new UnexpectedBackendException(e);
+        }
+    }
 }
