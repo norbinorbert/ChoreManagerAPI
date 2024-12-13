@@ -1,4 +1,4 @@
-package edu.bbte.idde.bnim2219.spring.model.dto.outgoing;
+package edu.bbte.idde.bnim2219.spring.controller.dto.outgoing;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,9 +9,9 @@ import java.sql.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NoIdChoreDTO {
+public class NoDescriptionChoreDTO {
+    private Long id;
     private String title;
-    private String description;
     private Date deadline;
     private Integer priorityLevel;
     private Boolean done;

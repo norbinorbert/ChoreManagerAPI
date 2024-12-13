@@ -18,7 +18,7 @@ import java.util.Collection;
 // implementation where chores are stored in database
 @Slf4j
 @Repository
-@Profile("!mem")
+@Profile("jdbc")
 public class ChoreInJdbcDao extends JdbcDao<Chore> implements ChoreDao {
 
     // creates a new chore and returns its id

@@ -4,6 +4,7 @@ import edu.bbte.idde.bnim2219.spring.dao.Dao;
 import edu.bbte.idde.bnim2219.spring.dao.exceptions.ChoreNotFoundException;
 import edu.bbte.idde.bnim2219.spring.model.BaseEntity;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 
 import java.util.Collection;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 // class that implements the CRUD functions, stores data in memory in a map
 @Slf4j
+@Profile("!jdbc")
 public abstract class MemoryDao<T extends BaseEntity> implements Dao<T> {
     protected Map<Long, T> entities = new ConcurrentHashMap<>();
     protected AtomicLong id = new AtomicLong();

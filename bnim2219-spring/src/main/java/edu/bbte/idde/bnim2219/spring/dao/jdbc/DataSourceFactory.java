@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Profile;
 import javax.sql.DataSource;
 
 @Configuration
-@Profile("!mem")
+@Profile("jdbc")
 public class DataSourceFactory {
 
     @Autowired

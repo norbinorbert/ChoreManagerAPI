@@ -1,9 +1,10 @@
-package edu.bbte.idde.bnim2219.spring.model;
+package edu.bbte.idde.bnim2219.spring.controller.dto;
 
-import edu.bbte.idde.bnim2219.spring.model.dto.incoming.NewChoreDTO;
-import edu.bbte.idde.bnim2219.spring.model.dto.incoming.UpdateChoreDTO;
-import edu.bbte.idde.bnim2219.spring.model.dto.outgoing.NoDescriptionChoreDTO;
-import edu.bbte.idde.bnim2219.spring.model.dto.outgoing.NoIdChoreDTO;
+import edu.bbte.idde.bnim2219.spring.controller.dto.incoming.NewChoreDTO;
+import edu.bbte.idde.bnim2219.spring.controller.dto.incoming.UpdateChoreDTO;
+import edu.bbte.idde.bnim2219.spring.controller.dto.outgoing.NoDescriptionChoreDTO;
+import edu.bbte.idde.bnim2219.spring.controller.dto.outgoing.NoIdChoreDTO;
+import edu.bbte.idde.bnim2219.spring.model.Chore;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
