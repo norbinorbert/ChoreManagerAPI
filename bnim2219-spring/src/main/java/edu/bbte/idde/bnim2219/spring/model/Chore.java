@@ -1,10 +1,11 @@
 package edu.bbte.idde.bnim2219.spring.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Date;
+import java.util.Collection;
 
 @Data
 @NoArgsConstructor
@@ -22,4 +23,7 @@ public class Chore extends BaseEntity {
     private Integer priorityLevel;
     @Column(nullable = false)
     private Boolean done;
+    @OneToMany(mappedBy = "chore", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonManagedReference
+    private Collection<Subtask> subtasks;
 }
