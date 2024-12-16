@@ -47,9 +47,9 @@ public class ChoreController {
     public ResponseEntity<Chore> create(@RequestBody @Valid NewChoreDTO newChoreDTO)
             throws BackendConnectionException {
         Chore chore = choreMapper.newChoreDTOtoChore(newChoreDTO);
+        chore.setDone(false);
         Long id = service.create(chore);
         chore.setId(id);
-        chore.setDone(false);
         URI createUri = URI.create("/books/" + id);
         return ResponseEntity.created(createUri).body(chore);
     }

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 // implementation where chores are stored in memory
 @Repository
-@Profile("!jdbc")
+@Profile("!jdbc & !jpa")
 @Slf4j
 public class ChoreInMemoryDao extends MemoryDao<Chore> implements ChoreDao {
 

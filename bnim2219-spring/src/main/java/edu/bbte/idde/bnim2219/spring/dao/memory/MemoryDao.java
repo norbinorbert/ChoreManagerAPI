@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 // class that implements the CRUD functions, stores data in memory in a map
 @Slf4j
-@Profile("!jdbc")
+@Profile("!jdbc & !jpa")
 public abstract class MemoryDao<T extends BaseEntity> implements Dao<T> {
     protected Map<Long, T> entities = new ConcurrentHashMap<>();
     protected AtomicLong id = new AtomicLong();

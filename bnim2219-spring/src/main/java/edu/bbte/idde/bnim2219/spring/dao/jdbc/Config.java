@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @NoArgsConstructor
 @Component
-@Profile("jdbc")
+@Profile({"jdbc", "jpa"})
 public class Config {
     @Value("${jdbc.url}")
     private String jdbcUrl;
