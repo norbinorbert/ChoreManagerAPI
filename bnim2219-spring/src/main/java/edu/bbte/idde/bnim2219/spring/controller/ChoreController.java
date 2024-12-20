@@ -1,5 +1,6 @@
 package edu.bbte.idde.bnim2219.spring.controller;
 
+import edu.bbte.idde.bnim2219.spring.controller.dto.outgoing.ChoreDTO;
 import edu.bbte.idde.bnim2219.spring.dao.exceptions.BackendConnectionException;
 import edu.bbte.idde.bnim2219.spring.dao.exceptions.ChoreNotFoundException;
 import edu.bbte.idde.bnim2219.spring.model.Chore;
@@ -44,14 +45,14 @@ public class ChoreController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Chore> create(@RequestBody @Valid NewChoreDTO newChoreDTO)
+    public ResponseEntity<ChoreDTO> create(@RequestBody @Valid NewChoreDTO newChoreDTO)
             throws BackendConnectionException {
         Chore chore = choreMapper.newChoreDTOtoChore(newChoreDTO);
         chore.setDone(false);
         Long id = service.create(chore);
         chore.setId(id);
         URI createUri = URI.create("/books/" + id);
-        return ResponseEntity.created(createUri).body(chore);
+        return ResponseEntity.created(createUri).body(choreMapper.choreToChoreDTO(chore));
     }
 
     @PatchMapping("/{id}")

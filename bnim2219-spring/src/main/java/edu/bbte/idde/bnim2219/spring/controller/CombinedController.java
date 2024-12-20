@@ -1,7 +1,10 @@
 package edu.bbte.idde.bnim2219.spring.controller;
 
+import edu.bbte.idde.bnim2219.spring.controller.dto.ChoreMapper;
 import edu.bbte.idde.bnim2219.spring.controller.dto.SubtaskMapper;
 import edu.bbte.idde.bnim2219.spring.controller.dto.incoming.NewSubtaskDTO;
+import edu.bbte.idde.bnim2219.spring.controller.dto.outgoing.ChoreDTO;
+import edu.bbte.idde.bnim2219.spring.controller.dto.outgoing.SubtaskDTO;
 import edu.bbte.idde.bnim2219.spring.dao.exceptions.BackendConnectionException;
 import edu.bbte.idde.bnim2219.spring.dao.exceptions.ChoreNotFoundException;
 import edu.bbte.idde.bnim2219.spring.model.Chore;
@@ -21,24 +24,26 @@ public class CombinedController {
     @Autowired
     private ChoreService choreService;
     @Autowired
+    private ChoreMapper choreMapper;
+    @Autowired
     private SubtaskMapper subtaskMapper;
 
     @GetMapping
-    public Collection<Subtask> findAll(@PathVariable("id") Long id)
+    public Collection<SubtaskDTO> findAll(@PathVariable("id") Long id)
             throws BackendConnectionException, ChoreNotFoundException {
-        return choreService.findById(id).getSubtasks();
+        return subtaskMapper.subtaskToSubtaskDTO(choreService.findById(id).getSubtasks());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Chore addSubtask(@PathVariable("id") Long id, @RequestBody NewSubtaskDTO newSubtaskDTO)
+    public ChoreDTO addSubtask(@PathVariable("id") Long id, @RequestBody NewSubtaskDTO newSubtaskDTO)
             throws BackendConnectionException, ChoreNotFoundException {
         Chore chore = choreService.findById(id);
         Subtask subtask = subtaskMapper.newSubtaskDTOtoSubtask(newSubtaskDTO);
         subtask.setChore(chore);
         chore.getSubtasks().add(subtask);
         choreService.update(id, chore);
-        return chore;
+        return choreMapper.choreToChoreDTO(chore);
     }
 
     @DeleteMapping("/{subtaskId}")
