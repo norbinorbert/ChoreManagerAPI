@@ -12,6 +12,7 @@
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
+    "@types/node": "^22.10.2",
     "eslint": "^9.17.0",
     "prettier": "^3.4.2",
     "ts-node": "^10.9.2",
