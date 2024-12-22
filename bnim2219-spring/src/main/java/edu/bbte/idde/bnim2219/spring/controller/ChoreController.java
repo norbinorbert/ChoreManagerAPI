@@ -51,7 +51,7 @@ public class ChoreController {
         chore.setDone(false);
         Long id = service.create(chore);
         chore.setId(id);
-        URI createUri = URI.create("/books/" + id);
+        URI createUri = URI.create("/chores/" + id);
         return ResponseEntity.created(createUri).body(choreMapper.choreToChoreDTO(chore));
     }
 
