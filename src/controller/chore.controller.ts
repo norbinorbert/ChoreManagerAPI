@@ -9,8 +9,7 @@ import {
   Body,
   HttpCode,
   HttpStatus,
-  UsePipes,
-  ValidationPipe,
+  BadRequestException,
 } from '@nestjs/common';
 import { ChoreService } from '../service/chore.service';
 import { NoDescriptionChoreDTO } from './dto/outgoing/noDescriptionChore.dto';
@@ -32,30 +31,37 @@ export class ChoreController {
 
   @Get(':id')
   async findById(@Param('id') id: number): Promise<NoIdChoreDTO> {
+    if (!id) {
+      throw new BadRequestException('Id must be a number');
+    }
     return this.choreService.findById(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @UsePipes(new ValidationPipe({ transform: true }))
   async create(@Body() choreData: NewChoreDTO): Promise<ChoreDTO> {
-    const id = await this.choreService.create(choreData);
+    const id = await this.choreService.create({ ...choreData, done: false });
     return { ...choreData, id, done: false } as ChoreDTO;
   }
 
   @Patch(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UsePipes(new ValidationPipe({ transform: true }))
   async update(
     @Param('id') id: number,
     @Body() choreData: UpdateChoreDTO
   ): Promise<void> {
+    if (!id) {
+      throw new BadRequestException('Id must be a number');
+    }
     await this.choreService.update(id, choreData);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id') id: number): Promise<void> {
+    if (!id) {
+      throw new BadRequestException('Id must be a number');
+    }
     await this.choreService.delete(id);
   }
 }

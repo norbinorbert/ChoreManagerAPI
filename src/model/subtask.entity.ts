@@ -9,6 +9,9 @@ export class Subtask {
   @Column()
   name!: string;
 
-  @ManyToOne(() => Chore, chore => chore.subtasks, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Chore, chore => chore.subtasks, {
+    orphanedRowAction: 'delete',
+    onDelete: 'CASCADE',
+  })
   chore!: Chore;
 }

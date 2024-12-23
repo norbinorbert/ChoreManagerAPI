@@ -19,14 +19,16 @@ export class ChoreService {
     if (done !== undefined) {
       return this.choreRepository.find({
         where: { done },
+        relations: ['subtasks'],
       });
     }
-    return this.choreRepository.find();
+    return this.choreRepository.find({ relations: ['subtasks'] });
   }
 
   async findById(id: number): Promise<Chore> {
     const chore = await this.choreRepository.findOne({
       where: { id },
+      relations: ['subtasks'],
     });
     if (!chore) {
       throw new NotFoundException('Chore not found');

@@ -7,8 +7,6 @@ import {
   Body,
   HttpCode,
   HttpStatus,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { ChoreService } from '../service/chore.service';
 import { Subtask } from '../model/subtask.entity';
@@ -17,7 +15,7 @@ import { NewSubtaskDTO } from './dto/incoming/newSubtask.dto';
 import { ChoreDTO } from './dto/outgoing/chore.dto';
 
 @Controller('chores/:choreId/subtasks')
-export class SubtaskController {
+export class CombinedController {
   constructor(private readonly choreService: ChoreService) {}
 
   @Get()
@@ -28,16 +26,19 @@ export class SubtaskController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @UsePipes(new ValidationPipe({ transform: true }))
   async create(
     @Param('choreId') choreId: number,
     @Body() subtaskData: NewSubtaskDTO
   ): Promise<ChoreDTO> {
     const chore = await this.choreService.findById(choreId);
     const subtask = { ...subtaskData, chore } as Subtask;
-    chore.subtasks.push(subtask);
+    if (!chore.subtasks) {
+      chore.subtasks = [subtask];
+    } else {
+      chore.subtasks.push(subtask);
+    }
     await this.choreService.update(choreId, chore);
-    return chore;
+    return this.choreService.findById(choreId);
   }
 
   @Delete(':subtaskId')
@@ -47,7 +48,11 @@ export class SubtaskController {
     @Param('subtaskId') subtaskId: number
   ): Promise<void> {
     const chore = await this.choreService.findById(choreId);
-    chore.subtasks = chore.subtasks.filter(subtask => subtask.id !== subtaskId);
-    await this.choreService.update(choreId, chore);
+    if (chore.subtasks) {
+      chore.subtasks = chore.subtasks.filter(
+        subtask => subtask.id !== subtaskId
+      );
+      await this.choreService.update(choreId, chore);
+    }
   }
 }

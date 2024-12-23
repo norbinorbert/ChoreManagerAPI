@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsDate,
@@ -20,6 +21,7 @@ export class UpdateChoreDTO {
   description!: string;
 
   @IsDate()
+  @Type(() => Date)
   deadline!: Date;
 
   @IsInt()

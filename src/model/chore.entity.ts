@@ -12,15 +12,29 @@ export class Chore {
   @Column({ nullable: true })
   description!: string;
 
-  @Column()
+  @Column('date')
   deadline!: Date;
 
   @Column('int')
   priorityLevel!: number;
 
-  @Column()
+  @Column('bool')
   done!: boolean;
 
-  @OneToMany(() => Subtask, subtask => subtask.chore, { cascade: true })
+  @OneToMany(() => Subtask, subtask => subtask.chore, {
+    cascade: true,
+    orphanedRowAction: 'delete',
+  })
   subtasks!: Subtask[];
+
+  toJSON() {
+    const { subtasks, ...rest } = this;
+    return {
+      ...rest,
+      subtasks: subtasks?.map(subtask => ({
+        ...subtask,
+        chore: undefined,
+      })),
+    };
+  }
 }

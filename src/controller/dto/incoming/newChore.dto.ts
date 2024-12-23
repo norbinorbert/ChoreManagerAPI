@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsDate,
   IsInt,
@@ -21,6 +22,7 @@ export class NewChoreDTO {
 
   @IsDate()
   @MinDate(new Date())
+  @Type(() => Date)
   deadline!: Date;
 
   @IsInt()
