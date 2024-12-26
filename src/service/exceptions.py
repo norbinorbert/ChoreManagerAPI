@@ -1,0 +1,2 @@
+class ChoreNotFoundException(Exception):
+    pass
