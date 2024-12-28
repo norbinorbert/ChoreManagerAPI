@@ -48,6 +48,7 @@ public class ChoreJpaDao implements ChoreDao {
             throw new ChoreNotFoundException();
         }
         entity.setId(id);
+        entity.setSubtasks(chore.get().getSubtasks());
         choreJpa.save(entity);
     }
 
