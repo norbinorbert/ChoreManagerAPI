@@ -1,6 +1,5 @@
 package edu.bbte.idde.bnim2219.spring.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,6 +23,5 @@ public class Chore extends BaseEntity {
     @Column(nullable = false)
     private Boolean done;
     @OneToMany(mappedBy = "chore", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JsonManagedReference
     private Collection<Subtask> subtasks;
 }

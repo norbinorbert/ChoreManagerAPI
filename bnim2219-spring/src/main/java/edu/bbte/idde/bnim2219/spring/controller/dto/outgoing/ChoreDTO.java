@@ -1,6 +1,5 @@
 package edu.bbte.idde.bnim2219.spring.controller.dto.outgoing;
 
-import edu.bbte.idde.bnim2219.spring.model.Subtask;
 import lombok.*;
 
 import java.sql.Date;
@@ -16,5 +15,5 @@ public class ChoreDTO {
     private Date deadline;
     private Integer priorityLevel;
     private Boolean done;
-    private Collection<Subtask> subtasks;
+    private Collection<SubtaskDTO> subtasks;
 }
