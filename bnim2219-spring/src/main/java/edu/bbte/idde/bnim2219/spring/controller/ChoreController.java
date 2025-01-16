@@ -1,14 +1,15 @@
 package edu.bbte.idde.bnim2219.spring.controller;
 
+import edu.bbte.idde.bnim2219.spring.controller.dto.outgoing.ChoreDTO;
+import edu.bbte.idde.bnim2219.spring.dao.exceptions.BackendConnectionException;
+import edu.bbte.idde.bnim2219.spring.dao.exceptions.ChoreNotFoundException;
 import edu.bbte.idde.bnim2219.spring.model.Chore;
-import edu.bbte.idde.bnim2219.spring.model.ChoreMapper;
-import edu.bbte.idde.bnim2219.spring.model.dto.incoming.NewChoreDTO;
-import edu.bbte.idde.bnim2219.spring.model.dto.incoming.UpdateChoreDTO;
-import edu.bbte.idde.bnim2219.spring.model.dto.outgoing.NoDescriptionChoreDTO;
-import edu.bbte.idde.bnim2219.spring.model.dto.outgoing.NoIdChoreDTO;
+import edu.bbte.idde.bnim2219.spring.controller.dto.ChoreMapper;
+import edu.bbte.idde.bnim2219.spring.controller.dto.incoming.NewChoreDTO;
+import edu.bbte.idde.bnim2219.spring.controller.dto.incoming.UpdateChoreDTO;
+import edu.bbte.idde.bnim2219.spring.controller.dto.outgoing.NoDescriptionChoreDTO;
+import edu.bbte.idde.bnim2219.spring.controller.dto.outgoing.NoIdChoreDTO;
 import edu.bbte.idde.bnim2219.spring.service.ChoreService;
-import edu.bbte.idde.bnim2219.spring.service.exceptions.ChoreProcessingException;
-import edu.bbte.idde.bnim2219.spring.service.exceptions.UnexpectedBackendException;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class ChoreController {
 
     @GetMapping
     public Collection<NoDescriptionChoreDTO> findAll(@PathParam("done") Boolean done)
-            throws UnexpectedBackendException {
+            throws BackendConnectionException {
         if (done != null) {
             return choreMapper.removeDescriptionFromChores(service.findChoresByDone(done));
         }
@@ -38,30 +39,31 @@ public class ChoreController {
 
     @GetMapping("/{id}")
     public NoIdChoreDTO findById(@PathVariable("id") Long id)
-            throws UnexpectedBackendException, ChoreProcessingException {
+            throws BackendConnectionException, ChoreNotFoundException {
         return choreMapper.removeIdFromChore(service.findById(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Chore> create(@RequestBody @Valid NewChoreDTO newChoreDTO) throws UnexpectedBackendException {
+    public ResponseEntity<ChoreDTO> create(@RequestBody @Valid NewChoreDTO newChoreDTO)
+            throws BackendConnectionException {
         Chore chore = choreMapper.newChoreDTOtoChore(newChoreDTO);
+        chore.setDone(false);
         Long id = service.create(chore);
         chore.setId(id);
-        chore.setDone(false);
-        URI createUri = URI.create("/books/" + id);
-        return ResponseEntity.created(createUri).body(chore);
+        URI createUri = URI.create("/chores/" + id);
+        return ResponseEntity.created(createUri).body(choreMapper.choreToChoreDTO(chore));
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable("id") Long id, @RequestBody @Valid UpdateChoreDTO updateChoreDTO)
-            throws UnexpectedBackendException, ChoreProcessingException {
+            throws BackendConnectionException, ChoreNotFoundException {
         service.update(id, choreMapper.updateChoreDTOtoChore(updateChoreDTO));
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id) throws UnexpectedBackendException, ChoreProcessingException {
+    public void delete(@PathVariable("id") Long id) throws BackendConnectionException, ChoreNotFoundException {
         service.delete(id);
     }
 }
