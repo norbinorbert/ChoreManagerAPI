@@ -29,10 +29,29 @@ public class ChoreServlet extends HttpServlet {
     }
 
     // returns a chore if id parameter was provided, otherwise returns all chores
+    // TODO: cyclomatic complexity
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             resp.setHeader("Content-Type", "application/json");
+            String minString = req.getParameter("min");
+            String maxString = req.getParameter("max");
+            if ((minString == null && maxString != null) || (minString != null && maxString == null)) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("min or max is null"));
+                return;
+            }
+            if (minString != null && maxString != null) {
+                int min = Integer.parseInt(minString);
+                int max = Integer.parseInt(maxString);
+                if (min > max) {
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("min can't be bigger than max"));
+                    return;
+                }
+                var chores = choreService.findByMinMax(min, max);
+                objectMapper.writeValue(resp.getOutputStream(), chores);
+            }
             String param = req.getParameter("id");
             if (param != null) {
                 var chore = choreService.findById(Long.parseLong(param));
@@ -50,7 +69,7 @@ public class ChoreServlet extends HttpServlet {
             objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Chore not found"));
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Bad format for ID"));
+            objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Bad format for ID or min or max"));
         }
     }
 
