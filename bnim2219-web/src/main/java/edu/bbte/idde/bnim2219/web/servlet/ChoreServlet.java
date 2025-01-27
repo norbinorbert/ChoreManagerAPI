@@ -1,6 +1,7 @@
 package edu.bbte.idde.bnim2219.web.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.bbte.idde.bnim2219.backend.config.ConfigFactory;
 import edu.bbte.idde.bnim2219.backend.model.Chore;
 import edu.bbte.idde.bnim2219.backend.service.ChoreService;
 import edu.bbte.idde.bnim2219.backend.service.exceptions.ChoreProcessingException;
@@ -28,11 +29,43 @@ public class ChoreServlet extends HttpServlet {
         choreService = new ChoreService();
     }
 
+    private boolean handleMinMax(String minString, String maxString, HttpServletResponse resp)
+            throws IOException, UnexpectedBackendException {
+        if (minString != null && maxString != null) {
+            if (!ConfigFactory.getMainConfiguration().isMinMax()) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("This feature is not supported"));
+                return true;
+            }
+            int min = Integer.parseInt(minString);
+            int max = Integer.parseInt(maxString);
+            if (min > max) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("min can't be bigger than max"));
+                return true;
+            }
+            var chores = choreService.findByMinMax(min, max);
+            objectMapper.writeValue(resp.getOutputStream(), chores);
+            return true;
+        }
+        if (minString == null && maxString == null) {
+            return false;
+        }
+        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("min or max is null"));
+        return true;
+    }
+
     // returns a chore if id parameter was provided, otherwise returns all chores
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             resp.setHeader("Content-Type", "application/json");
+            String minString = req.getParameter("min");
+            String maxString = req.getParameter("max");
+            if (handleMinMax(minString, maxString, resp)) {
+                return;
+            }
             String param = req.getParameter("id");
             if (param != null) {
                 var chore = choreService.findById(Long.parseLong(param));
@@ -50,7 +83,7 @@ public class ChoreServlet extends HttpServlet {
             objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Chore not found"));
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Bad format for ID"));
+            objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("Bad format for ID or min or max"));
         }
     }
 

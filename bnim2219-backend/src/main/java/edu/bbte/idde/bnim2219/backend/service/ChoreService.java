@@ -60,4 +60,12 @@ public class ChoreService implements Serializable {
             throw new ChoreProcessingException(e);
         }
     }
+
+    public Collection<Chore> findByMinMax(Integer min, Integer max) throws UnexpectedBackendException {
+        try {
+            return data.findByMinMax(min, max);
+        } catch (BackendConnectionException e) {
+            throw new UnexpectedBackendException(e);
+        }
+    }
 }

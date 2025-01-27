@@ -143,4 +143,26 @@ public class ChoreInJdbcDao extends JdbcDao<Chore> implements ChoreDao {
             throw new BackendConnectionException(e);
         }
     }
+
+    @Override
+    public Collection<Chore> findByMinMax(Integer min, Integer max) throws BackendConnectionException {
+        try (Connection connection = getConnection()) {
+            log.info("Trying to find chores by min and max");
+            String query = "select * from chores where priorityLevel >= ? and priorityLevel <= ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, min);
+                preparedStatement.setInt(2, max);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                Collection<Chore> chores = new ArrayList<>();
+                while (resultSet.next()) {
+                    chores.add(createChoreFromResultSet(resultSet));
+                }
+                log.info("Successfully found chores by min and max");
+                return chores;
+            }
+        } catch (SQLException e) {
+            log.error("Failed to find chores by min and max due to server error: {}", e.getMessage());
+            throw new BackendConnectionException(e);
+        }
+    }
 }

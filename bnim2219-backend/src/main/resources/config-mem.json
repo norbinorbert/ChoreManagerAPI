@@ -1,3 +1,4 @@
 {
-  "dao": "edu.bbte.idde.bnim2219.backend.dao.memory.MemoryDaoFactory"
+  "dao": "edu.bbte.idde.bnim2219.backend.dao.memory.MemoryDaoFactory",
+  "minMax": false
 }

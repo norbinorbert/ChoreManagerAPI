@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.util.Collection;
 
 @Data
 @NoArgsConstructor
@@ -15,4 +16,5 @@ public class NoDescriptionChoreDTO {
     private Date deadline;
     private Integer priorityLevel;
     private Boolean done;
+    private Collection<SubtaskDTO> subtasks;
 }

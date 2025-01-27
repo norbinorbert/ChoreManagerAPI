@@ -29,4 +29,6 @@ public abstract class ChoreMapper {
 
     @IterableMapping(elementTargetType = NoDescriptionChoreDTO.class)
     public abstract Collection<NoDescriptionChoreDTO> removeDescriptionFromChores(Iterable<Chore> chores);
+
+    public abstract NoDescriptionChoreDTO removeDescriptionFromChore(Chore chore);
 }
