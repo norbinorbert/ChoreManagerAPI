@@ -1,6 +1,7 @@
 package edu.bbte.idde.bnim2219.web.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.bbte.idde.bnim2219.backend.config.ConfigFactory;
 import edu.bbte.idde.bnim2219.backend.model.Chore;
 import edu.bbte.idde.bnim2219.backend.service.ChoreService;
 import edu.bbte.idde.bnim2219.backend.service.exceptions.ChoreProcessingException;
@@ -36,12 +37,11 @@ public class ChoreServlet extends HttpServlet {
             resp.setHeader("Content-Type", "application/json");
             String minString = req.getParameter("min");
             String maxString = req.getParameter("max");
-            if ((minString == null && maxString != null) || (minString != null && maxString == null)) {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("min or max is null"));
-                return;
-            }
             if (minString != null && maxString != null) {
+                if (!ConfigFactory.getMainConfiguration().isMinMax()) {
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("This feature is not supported"));
+                }
                 int min = Integer.parseInt(minString);
                 int max = Integer.parseInt(maxString);
                 if (min > max) {
@@ -51,6 +51,11 @@ public class ChoreServlet extends HttpServlet {
                 }
                 var chores = choreService.findByMinMax(min, max);
                 objectMapper.writeValue(resp.getOutputStream(), chores);
+            }
+            if ((minString == null && maxString != null) || (minString != null && maxString == null)) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("min or max is null"));
+                return;
             }
             String param = req.getParameter("id");
             if (param != null) {

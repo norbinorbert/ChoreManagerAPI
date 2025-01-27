@@ -9,4 +9,6 @@ public class MainConfig {
     private String daoClassName;
     @JsonProperty("jdbc")
     private JdbcConfig jdbcConfig = new JdbcConfig();
+    @JsonProperty("minMax")
+    private boolean minMax;
 }
