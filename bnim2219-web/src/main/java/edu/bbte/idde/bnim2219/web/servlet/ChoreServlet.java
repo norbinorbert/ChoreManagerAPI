@@ -35,25 +35,25 @@ public class ChoreServlet extends HttpServlet {
             if (!ConfigFactory.getMainConfiguration().isMinMax()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("This feature is not supported"));
-                return false;
+                return true;
             }
             int min = Integer.parseInt(minString);
             int max = Integer.parseInt(maxString);
             if (min > max) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("min can't be bigger than max"));
-                return false;
+                return true;
             }
             var chores = choreService.findByMinMax(min, max);
             objectMapper.writeValue(resp.getOutputStream(), chores);
             return true;
         }
         if (minString == null && maxString == null) {
-            return true;
+            return false;
         }
         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("min or max is null"));
-        return false;
+        return true;
     }
 
     // returns a chore if id parameter was provided, otherwise returns all chores
