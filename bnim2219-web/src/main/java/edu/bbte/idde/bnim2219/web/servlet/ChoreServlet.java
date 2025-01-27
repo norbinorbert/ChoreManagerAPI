@@ -29,32 +29,41 @@ public class ChoreServlet extends HttpServlet {
         choreService = new ChoreService();
     }
 
+    private boolean handleMinMax(String minString, String maxString, HttpServletResponse resp)
+            throws IOException, UnexpectedBackendException {
+        if (minString != null && maxString != null) {
+            if (!ConfigFactory.getMainConfiguration().isMinMax()) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("This feature is not supported"));
+                return false;
+            }
+            int min = Integer.parseInt(minString);
+            int max = Integer.parseInt(maxString);
+            if (min > max) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("min can't be bigger than max"));
+                return false;
+            }
+            var chores = choreService.findByMinMax(min, max);
+            objectMapper.writeValue(resp.getOutputStream(), chores);
+            return true;
+        }
+        if (minString == null && maxString == null) {
+            return true;
+        }
+        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("min or max is null"));
+        return false;
+    }
+
     // returns a chore if id parameter was provided, otherwise returns all chores
-    // TODO: cyclomatic complexity
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             resp.setHeader("Content-Type", "application/json");
             String minString = req.getParameter("min");
             String maxString = req.getParameter("max");
-            if (minString != null && maxString != null) {
-                if (!ConfigFactory.getMainConfiguration().isMinMax()) {
-                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("This feature is not supported"));
-                }
-                int min = Integer.parseInt(minString);
-                int max = Integer.parseInt(maxString);
-                if (min > max) {
-                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("min can't be bigger than max"));
-                    return;
-                }
-                var chores = choreService.findByMinMax(min, max);
-                objectMapper.writeValue(resp.getOutputStream(), chores);
-            }
-            if ((minString == null && maxString != null) || (minString != null && maxString == null)) {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                objectMapper.writeValue(resp.getOutputStream(), new InfoMessage("min or max is null"));
+            if (handleMinMax(minString, maxString, resp)) {
                 return;
             }
             String param = req.getParameter("id");
