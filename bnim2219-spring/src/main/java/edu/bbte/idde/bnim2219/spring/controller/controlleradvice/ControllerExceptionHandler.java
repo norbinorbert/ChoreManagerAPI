@@ -1,6 +1,7 @@
 package edu.bbte.idde.bnim2219.spring.controller.controlleradvice;
 
 import edu.bbte.idde.bnim2219.spring.controller.controlleradvice.utils.ErrorMessage;
+import edu.bbte.idde.bnim2219.spring.controller.exception.InvalidFullException;
 import edu.bbte.idde.bnim2219.spring.dao.exceptions.BackendConnectionException;
 import edu.bbte.idde.bnim2219.spring.dao.exceptions.ChoreNotFoundException;
 import jakarta.validation.ConstraintViolationException;
@@ -52,5 +53,13 @@ public class ControllerExceptionHandler {
     public final ErrorMessage handleChoreNotFoundException(ChoreNotFoundException e) {
         log.info("ChoreNotFoundException occurred", e);
         return new ErrorMessage("Couldn't find chore because it likely doesn't exist");
+    }
+
+    @ExceptionHandler(InvalidFullException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public final ErrorMessage handleInvalidFullException(InvalidFullException e) {
+        log.info("InvalidFullException occurred", e);
+        return new ErrorMessage("Full parameter can only have the values 'yes' or 'no'");
     }
 }

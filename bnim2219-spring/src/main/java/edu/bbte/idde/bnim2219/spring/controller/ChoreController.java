@@ -1,6 +1,7 @@
 package edu.bbte.idde.bnim2219.spring.controller;
 
 import edu.bbte.idde.bnim2219.spring.controller.dto.outgoing.ChoreDTO;
+import edu.bbte.idde.bnim2219.spring.controller.exception.InvalidFullException;
 import edu.bbte.idde.bnim2219.spring.dao.exceptions.BackendConnectionException;
 import edu.bbte.idde.bnim2219.spring.dao.exceptions.ChoreNotFoundException;
 import edu.bbte.idde.bnim2219.spring.model.Chore;
@@ -11,6 +12,7 @@ import edu.bbte.idde.bnim2219.spring.controller.dto.outgoing.NoDescriptionChoreD
 import edu.bbte.idde.bnim2219.spring.controller.dto.outgoing.NoIdChoreDTO;
 import edu.bbte.idde.bnim2219.spring.service.ChoreService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,9 +40,16 @@ public class ChoreController {
     }
 
     @GetMapping("/{id}")
-    public NoIdChoreDTO findById(@PathVariable("id") Long id)
-            throws BackendConnectionException, ChoreNotFoundException {
-        return choreMapper.removeIdFromChore(service.findById(id));
+    public Object findById(@PathVariable("id") Long id,
+                                 @RequestParam(value = "full", required = true) String full)
+            throws BackendConnectionException, ChoreNotFoundException, InvalidFullException {
+        if (full.equals("no")) {
+            return choreMapper.removeDescriptionFromChore(service.findById(id));
+        } else if (full.equals("yes")) {
+            return choreMapper.choreToChoreDTO(service.findById(id));
+        } else {
+            throw new InvalidFullException();
+        }
     }
 
     @PostMapping
